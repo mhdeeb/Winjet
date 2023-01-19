@@ -6,8 +6,8 @@ ssql::ssql() {
 	SQLAllocHandle(SQL_HANDLE_DBC, sqlEnvHandle, &sqlConnHandle);
 }
 
-bool ssql::connect(SQLWCHAR* connString) {
-	SQLDriverConnectW(sqlConnHandle, nullptr, connString, SQL_NTS, nullptr, 1024, nullptr, SQL_DRIVER_NOPROMPT);
+bool ssql::connect(SQLCHAR* connString) {
+	SQLDriverConnectA(sqlConnHandle, nullptr, connString, SQL_NTS, nullptr, 1024, nullptr, SQL_DRIVER_NOPROMPT);
 	bool result = SQLAllocHandle(SQL_HANDLE_STMT, sqlConnHandle, &sqlStmtHandle);
 	connected = true;
 	return result == SQL_SUCCESS;

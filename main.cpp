@@ -9,10 +9,12 @@
 int WINAPI ENTRY(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd) {
 	registerOverlayWindow(hInstance);
 	CreateOverlayWindow(hInstance);
+	//LoadWindows();
 	MSG msg;
 	while (GetMessage(&msg, nullptr, 0, 0)) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+	//SaveWindows();
 	return  int(msg.wParam);
 }

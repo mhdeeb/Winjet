@@ -17,9 +17,9 @@ void registerOverlayWindow(HINSTANCE hInstance) {
 	wndclass.cbClsExtra = 0;
 	wndclass.cbWndExtra = 0;
 	wndclass.hInstance = hInstance;
-	wndclass.hIcon = LoadIcon(nullptr, IDI_ASTERISK);
-	wndclass.hCursor = LoadCursor(nullptr, IDC_CROSS);
-	wndclass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	wndclass.hIcon = LoadIcon(nullptr, IDI_INFORMATION);
+	wndclass.hCursor = LoadCursor(nullptr, IDC_HAND);
+	wndclass.hbrBackground = CreateSolidBrush(RGB(100, 0, 100));
 	wndclass.lpszMenuName = nullptr;
 	wndclass.lpszClassName = L"Overlay";
 
@@ -27,24 +27,18 @@ void registerOverlayWindow(HINSTANCE hInstance) {
 }
 
 HWND CreateOverlayWindow(HINSTANCE hInstance) {
-	HWND hwnd = GetDesktopWindow();
-
-	RECT desktop;
-	GetWindowRect(hwnd, &desktop);
-
-	hwnd = CreateWindowExW(
-		WS_EX_LAYERED,
+	HWND hwnd = CreateWindowExW(
+		WS_EX_LAYERED | WS_EX_TOOLWINDOW,
 		L"Overlay",
-		nullptr,
-		WS_POPUP | WS_VISIBLE,
-		desktop.left + 100,
-		desktop.top + 100,
+		L"Widget",
+		WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		100,
 		100,
-		hwnd, nullptr, hInstance, nullptr
+		200,
+		200,
+		HWND_DESKTOP, nullptr, hInstance, nullptr
 	);
-
-	SetLayeredWindowAttributes(hwnd, 0, 127, LWA_ALPHA);
+	SetLayeredWindowAttributes(hwnd, RGB(100, 100, 100), 127, LWA_ALPHA);
 	inputHandler = std::make_unique<input>(hwnd, hInstance);
 	return hwnd;
 }

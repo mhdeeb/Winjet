@@ -1,11 +1,21 @@
 #include "my_ssql.h"
+#include "process.h"
+
+#include <format>
+#include <iostream>
+
+std::string getConnectionString() {
+	exec("SqlLocalDB s ProjectModels");
+	std::string server = exec("SqlLocalDB i ProjectModels | grep -E \"([A-F]|[0-9]){8}\" -o");
+	return std::vformat("DRIVER={{SQL Server}};Server=np:\\\\.\\pipe\\LOCALDB#{}\\tsql\\query;database=Win32Const", make_format_args(server.substr(0, server.size() - 1)));
+}
+
+std::string connString = getConnectionString();
 
 std::string my_ssql::code_to_name_msg(int code) {
-	auto connString = (SQLWCHAR*)L"DRIVER={SQL Server};Server=np:\\\\.\\pipe\\LOCALDB#86E7D6C9\\tsql\\query;database=Win32Const";
-
 	ssql sql;
 
-	sql.connect(connString);
+	sql.connect((SQLCHAR*)connString.c_str());
 
 	std::string result;
 
@@ -18,11 +28,9 @@ std::string my_ssql::code_to_name_msg(int code) {
 }
 
 std::string my_ssql::code_to_name_vk(int code) {
-	auto connString = (SQLWCHAR*)L"DRIVER={SQL Server};Server=np:\\\\.\\pipe\\LOCALDB#86E7D6C9\\tsql\\query;database=Win32Const";
-
 	ssql sql;
 
-	sql.connect(connString);
+	sql.connect((SQLCHAR*)connString.c_str());
 
 	std::string result;
 

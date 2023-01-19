@@ -16,7 +16,7 @@ private:
 public:
 	ssql();
 
-	bool connect(SQLWCHAR* connString);
+	bool connect(SQLCHAR* connString);
 
 	bool quary(const std::string& quary);
 
