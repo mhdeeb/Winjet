@@ -366,7 +366,6 @@ struct input {
 	CallBackTimer timer2;
 	HWND hwnd;
 	input(HWND hwnd, HINSTANCE hInstance): hInstance(hInstance), mouse(hwnd), hwnd(hwnd) {
-		CheckDarkMode(hwnd);
 		move(hwnd, 0, 0);
 		setFont();
 		setBrush();
