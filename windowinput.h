@@ -3,10 +3,22 @@
 #include "my_ssql.h"
 #include "window.h"
 #include "test.h"
+#include "CallBackTimer.h"
 
 #include <commctrl.h>
+#include <format>
+#include <chrono>
 
 using namespace test;
+
+#define WM_FRAME (WM_USER + 1)
+#define WM_60_FRAMES (WM_USER + 2)
+
+std::string exec(const char*);
+
+std::string time_string;
+HFONT hFont;
+HBRUSH hBrush;
 
 bool isMouseEvent(UINT message) {
 	switch (message) {
@@ -106,6 +118,9 @@ LRESULT HandleMouse(mouseInput& mouse, HWND hwnd, UINT message, WPARAM wParam, L
 		GetCursorPos(&mouse.p);
 		mouse.delta.x = mouse.p.x - p.x;
 		mouse.delta.y = mouse.p.y - p.y;
+		if (mouse.isLeftDown) {
+			move(hwnd, mouse.delta.x, mouse.delta.y);
+		}
 		return 0;
 	case WM_LBUTTONDOWN:
 		mouse.isLeftDown = true;
@@ -148,21 +163,131 @@ LRESULT HandleKeyboard(keyboardInput& keyboard, HWND hwnd, UINT message, WPARAM 
 	}
 }
 
+// Generic Font family's
+enum fontfamily {
+	BY_NAME,	// use font name instead of abstract type
+	MODERN,		// monospace with or without serifs
+	ROMAN,		// variable width with serifs
+	SCRIPT,		// like handwriting
+	SWISS		  // variable width without serifs
+};
+
+const unsigned char PLAIN = 0x00;
+const unsigned char BOLD = 0x01;
+const unsigned char ITALICIZED = 0x02;
+const unsigned char UNDERLINED = 0x04;
+const unsigned char STRIKEOUT = 0x08;
+
+void SetFont(HFONT& fontObject, const int iSize, const unsigned short usStyle, const fontfamily ffFamily, const wchar_t* cFontName) {
+	LOGFONT lf{sizeof(lf)};
+
+	lf.lfHeight = iSize;
+	lf.lfWidth = 0;
+	lf.lfEscapement = 0;
+	lf.lfOrientation = 0;
+
+	if ((usStyle & BOLD) == BOLD) {
+		lf.lfWeight = FW_BOLD;
+	} else {
+		lf.lfWeight = FW_NORMAL;
+	}
+
+	if ((usStyle & ITALICIZED) == ITALICIZED) {
+		lf.lfItalic = true;
+	} else {
+		lf.lfItalic = false;
+	}
+
+	if ((usStyle & UNDERLINED) == UNDERLINED) {
+		lf.lfUnderline = true;
+	} else {
+		lf.lfUnderline = false;
+	}
+
+	if ((usStyle & STRIKEOUT) == STRIKEOUT) {
+		lf.lfStrikeOut = true;
+	} else {
+		lf.lfStrikeOut = false;
+	}
+
+	lf.lfStrikeOut = FALSE;
+	lf.lfCharSet = DEFAULT_CHARSET;
+	lf.lfOutPrecision = OUT_DEFAULT_PRECIS;
+	lf.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+	lf.lfQuality = DEFAULT_QUALITY;
+
+	switch (ffFamily) {
+	case MODERN:
+		lf.lfPitchAndFamily = FF_MODERN;
+		break;
+
+	case ROMAN:
+		lf.lfPitchAndFamily = FF_ROMAN;
+		break;
+
+	case SCRIPT:
+		lf.lfPitchAndFamily = FF_SCRIPT;
+		break;
+
+	case SWISS:
+		lf.lfPitchAndFamily = FF_SWISS;
+		break;
+
+	default:
+		lf.lfPitchAndFamily = FF_DONTCARE;
+		break;
+	}
+
+	lf.lfPitchAndFamily |= DEFAULT_PITCH;
+	if (cFontName)
+		wcscpy_s(lf.lfFaceName, cFontName);
+
+	fontObject = CreateFontIndirect(&lf);
+}
+
+void setFont() {
+	SetFont(hFont, 40, BOLD, MODERN, L"Curier New");
+}
+
+void setBrush() {
+	hBrush = CreateSolidBrush(RGB(0, 0, 1));
+}
+
 void HandlePaint(HWND hwnd) {
-	RECT rect;
-	GetClientRect(hwnd, &rect);
-	TCHAR szBuffer[] = TEXT("Hello World!");
-	HFONT hFont = CreateFont(80, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, TEXT("SYSTEM_FIXED_FONT"));
-	HBRUSH hBrush = CreateSolidBrush(RGB(0, 0, 0));
 	PAINTSTRUCT ps;
 	HDC hDC = BeginPaint(hwnd, &ps);
-	HBRUSH hTmpBr = (HBRUSH)SelectObject(hDC, hBrush);
-	HFONT hTmpFnt = (HFONT)SelectObject(hDC, hFont);
-	SetBkMode(hDC, TRANSPARENT);
-	SetTextColor(hDC, RGB(128, 0, 0));
-	FillRect(hDC, &rect, hBrush);
-	DrawText(hDC, szBuffer, 13, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+
+	HDC backbufferDC = CreateCompatibleDC(hDC);
+	RECT rect;
+	GetClientRect(hwnd, &rect);
+	int width = rect.right;
+	int height = rect.bottom;
+	HBITMAP backbuffer = CreateCompatibleBitmap(hDC, width, height);
+	int savedDC = SaveDC(backbufferDC);
+	SelectObject(backbufferDC, backbuffer);
+
+	HBRUSH hTmpBr = (HBRUSH)SelectObject(backbufferDC, hBrush);
+	HFONT hTmpFnt = (HFONT)SelectObject(backbufferDC, hFont);
+	SetBkMode(backbufferDC, TRANSPARENT);
+	SetTextColor(backbufferDC, RGB(128, 128, 255));
+
+	FillRect(backbufferDC, &rect, hBrush);														// Clear Window
+
+	std::wstring wcommand(time_string.begin(), time_string.end());
+	const TCHAR* szBuffer = wcommand.c_str();
+	//RECT text(rect);
+	//text.left += 1500;
+	//text.top += 20;
+	DrawText(backbufferDC, szBuffer, int(wcommand.size()), &rect, BS_CENTER);	// Draw Text
+
+	BitBlt(hDC, 0, 0, width, height, backbufferDC, 0, 0, SRCCOPY);
+	RestoreDC(backbufferDC, savedDC);
+	DeleteObject(backbuffer);
+	DeleteDC(backbufferDC);
+
 	EndPaint(hwnd, &ps);
+	//SwapBuffers(hDC);
+	//ReleaseDC(hwnd, hDC);
 	DeleteObject(SelectObject(hDC, hTmpBr));
 	DeleteObject(SelectObject(hDC, hTmpFnt));
 }
@@ -228,13 +353,32 @@ void Log(UINT message, WPARAM wParam) {
 		printv("Other Event: {}\n", my_ssql::code_to_name_msg(message));
 }
 
+std::string return_current_time_and_date() {
+	auto now = std::chrono::current_zone()->to_local(std::chrono::system_clock::now());
+	return std::format("{:%Y-%m-%d %X}", now);
+}
+
 struct input {
 	HINSTANCE hInstance;
 	mouseInput mouse;
 	keyboardInput keyboard;
-	input(HWND hwnd, HINSTANCE hInstance): hInstance(hInstance), mouse(hwnd) {
+	CallBackTimer timer;
+	CallBackTimer timer2;
+	HWND hwnd;
+	input(HWND hwnd, HINSTANCE hInstance): hInstance(hInstance), mouse(hwnd), hwnd(hwnd) {
 		CheckDarkMode(hwnd);
-		move(hwnd, 100, 100);
+		move(hwnd, 0, 0);
+		setFont();
+		setBrush();
+		timer.start(1000, [hwnd](std::string& output) {
+			output = return_current_time_and_date();
+		SendMessage(hwnd, WM_FRAME, 0, 0);
+			}, std::ref(time_string));
+		//timer2.start(16, [hwnd]() {SendMessage(hwnd, WM_60_FRAMES, 0, 0); });
+	}
+	~input() {
+		timer.stop();
+		timer2.stop();
 	}
 
 	LRESULT HandleInput(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -244,10 +388,16 @@ struct input {
 		if (isKeyboardEvent(message))
 			return HandleKeyboard(keyboard, hwnd, message, wParam, lParam);
 		switch (message) {
+		case WM_60_FRAMES:
+		case WM_FRAME:
+			HandlePaint(hwnd);
+			InvalidateRect(hwnd, nullptr, false);
+			return 0;
 		case WM_PAINT:
-		case WM_ERASEBKGND:
 			HandlePaint(hwnd);
 			return 0;
+		case WM_ERASEBKGND:
+			return 1;
 		case WM_WINDOWPOSCHANGING:
 			((LPWINDOWPOS)lParam)->hwndInsertAfter = HWND_BOTTOM;
 			return DefWindowProc(hwnd, message, wParam, lParam);

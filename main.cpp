@@ -8,7 +8,9 @@
 
 int WINAPI ENTRY(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd) {
 	registerOverlayWindow(hInstance);
-	CreateOverlayWindow(hInstance);
+	HWND parent = CreateParentOverlayWindow(hInstance);
+	CreateChildOverlayWindow(parent, hInstance, L"Base", 0, 0, 0, 0, true);
+	CreateChildOverlayWindow(parent, hInstance, L"Widget", 1500, 20, 400, 40);
 	//LoadWindows();
 	MSG msg;
 	while (GetMessage(&msg, nullptr, 0, 0)) {

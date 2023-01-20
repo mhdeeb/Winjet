@@ -47,5 +47,8 @@
     <ClInclude Include="process.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CallBackTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

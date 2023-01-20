@@ -31,6 +31,6 @@ void CheckDarkMode(HWND hwnd) {
 
 void move(HWND hwnd, LONG x, LONG y) {
 	RECT rect;
-	GetClientRect(hwnd, &rect);
+	GetWindowRect(hwnd, &rect);
 	SetWindowPos(hwnd, HWND_BOTTOM, rect.left + x, rect.top + y, rect.right - rect.left, rect.bottom - rect.top, 0);
 }
