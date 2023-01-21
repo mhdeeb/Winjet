@@ -18,11 +18,36 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\CallBackTimer.cpp" />
+    <ClCompile Include="src\controller.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\messages.cpp" />
+    <ClCompile Include="src\my_ssql.cpp" />
+    <ClCompile Include="src\paint.cpp" />
+    <ClCompile Include="src\process.cpp" />
+    <ClCompile Include="src\ssql.cpp" />
+    <ClCompile Include="src\window.cpp" />
+    <ClCompile Include="src\windowinput.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\CallBackTimer.h" />
+    <ClInclude Include="src\controller.h" />
+    <ClInclude Include="src\messages.h" />
+    <ClInclude Include="src\my_ssql.h" />
+    <ClInclude Include="src\paint.h" />
+    <ClInclude Include="src\process.h" />
+    <ClInclude Include="src\ssql.h" />
+    <ClInclude Include="src\printer.h" />
+    <ClInclude Include="src\util.h" />
+    <ClInclude Include="src\window.h" />
+    <ClInclude Include="src\windowinput.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{be6af379-5abc-4520-949a-68c9de06e8a6}</ProjectGuid>
-    <RootNamespace>ConsoleApplication1</RootNamespace>
+    <RootNamespace>Winjet</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -130,21 +155,6 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="my_ssql.cpp" />
-    <ClCompile Include="ssql.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="CallBackTimer.h" />
-    <ClInclude Include="my_ssql.h" />
-    <ClInclude Include="process.h" />
-    <ClInclude Include="ssql.h" />
-    <ClInclude Include="test.h" />
-    <ClInclude Include="controller.h" />
-    <ClInclude Include="window.h" />
-    <ClInclude Include="windowinput.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

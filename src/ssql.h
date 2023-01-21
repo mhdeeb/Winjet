@@ -1,8 +1,9 @@
 #pragma once
-#include <sstream>
+
+#include <string>
+
 #include <Windows.h>
-#include <sqlext.h>
-#include <array>
+#include <sql.h>
 
 constexpr int SQL_RESULT_LEN = 1024;
 

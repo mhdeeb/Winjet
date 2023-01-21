@@ -1,5 +1,9 @@
 #include "ssql.h"
 
+#include <sstream>
+#include <array>
+#include <sqlext.h>
+
 ssql::ssql() {
 	SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &sqlEnvHandle);
 	SQLSetEnvAttr(sqlEnvHandle, SQL_ATTR_ODBC_VERSION, (SQLPOINTER)SQL_OV_ODBC3, 0);
@@ -22,8 +26,9 @@ bool ssql::getResults(std::string& result, const std::string& delimiter) {
 	if (SQLFetch(sqlStmtHandle) == SQL_SUCCESS) {
 		std::array<SQLCHAR, SQL_RESULT_LEN>data{};
 		SQLUSMALLINT i = 1;
-		if (SQLGetData(sqlStmtHandle, i, SQL_CHAR, &data, SQL_RESULT_LEN, nullptr) == SQL_SUCCESS)
+		if (SQLGetData(sqlStmtHandle, i, SQL_CHAR, &data, SQL_RESULT_LEN, nullptr) == SQL_SUCCESS) {
 			ss << data.data();
+		}
 		while (SQLGetData(sqlStmtHandle, i + 1, SQL_CHAR, &data, SQL_RESULT_LEN, nullptr) == SQL_SUCCESS) {
 			ss << delimiter << data.data();
 			i++;

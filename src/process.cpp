@@ -1,6 +1,5 @@
-#pragma once
+#include "process.h"
 
-#include <string>
 #include <memory>
 
 std::string exec(const char* cmd) {

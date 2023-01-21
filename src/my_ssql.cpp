@@ -1,8 +1,8 @@
 #include "my_ssql.h"
+#include "ssql.h"
 #include "process.h"
 
 #include <format>
-#include <iostream>
 
 std::string getConnectionString() {
 	exec("SqlLocalDB s ProjectModels");

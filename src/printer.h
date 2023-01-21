@@ -2,13 +2,12 @@
 // Created by Mohamed Hussien El-Deeb on 12/20/2022.
 //
 
-#ifndef CIE_202_TEST_H
-#define CIE_202_TEST_H
+#pragma once
 
 #include <iostream>
 #include <format>
 
-namespace test {
+namespace printer {
 	std::string _sep = " ";
 	std::string _end = "\n";
 
@@ -33,5 +32,3 @@ namespace test {
 		_end = ending;
 	}
 }
-
-#endif //CIE_202_TEST_H
