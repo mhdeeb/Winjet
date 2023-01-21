@@ -37,6 +37,7 @@
     <ClInclude Include="src\my_ssql.h" />
     <ClInclude Include="src\paint.h" />
     <ClInclude Include="src\process.h" />
+    <ClInclude Include="src\procs.h" />
     <ClInclude Include="src\ssql.h" />
     <ClInclude Include="src\printer.h" />
     <ClInclude Include="src\util.h" />

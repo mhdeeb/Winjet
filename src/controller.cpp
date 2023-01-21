@@ -2,73 +2,45 @@
 #include "windowinput.h"
 #include "messages.h"
 #include "paint.h"
-#include "window.h"
 #include "util.h"
+#include "procs.h"
 
-LRESULT CALLBACK HandleInput(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
-	Log(message, wParam);
-	//if (isMouseEvent(message))
-	//	return HandleMouse(mouse, hwnd, message, wParam, lParam);
-	//if (isKeyboardEvent(message))
-	//	return HandleKeyboard(keyboard, hwnd, message, wParam, lParam);
-	switch (message) {
-	case WM_60_FRAMES:
-	case WM_FRAME:
-		HandlePaint(hwnd);
-		InvalidateRect(hwnd, nullptr, false);
-		return 0;
-	case WM_PAINT:
-		HandlePaint(hwnd);
-		return 0;
-	case WM_ERASEBKGND:
-		return 1;
-	case WM_WINDOWPOSCHANGING:
-		((LPWINDOWPOS)lParam)->hwndInsertAfter = HWND_BOTTOM;
-		return DefWindowProc(hwnd, message, wParam, lParam);
-	case WM_DESTROY:
-		DestroyWindow(hwnd);
-		PostQuitMessage(0);
-		return 0;
-	default:
-		return DefWindowProc(hwnd, message, wParam, lParam);
+void EachSixtyFrames(const Controller* cont) {
+	for (auto& [Class, windows] : cont->classes) {
+		for (auto window : windows) {
+			PostMessage(window, WM_60_FRAMES, 0, 0);
+		}
 	}
 }
 
-void Controller::UpdateTime() {}
-
-void EachSixtyFrames(HWND hwnd) {
-	PostMessage(hwnd, WM_60_FRAMES, 0, 0);
+void UpdateTime(Controller* cont) {
+	cont->time_string = return_current_time_and_date();
 }
 
 Controller::Controller(HINSTANCE HInstance): hInstance(HInstance) {
-	RegisterWindowClass(hInstance, HIDDENCLASS, HandleInput);
-	RegisterWindowClass(hInstance, CANVASCLASS, HandleInput);
-
-	base = CreateHiddenWindow(hInstance);
-	canvas = CreateCanvasOverlayWindow(hInstance, base);
-
 	SetFont(hFont, 40, BOLD, MODERN, L"Curier New");
 	hBrush = CreateSolidBrush(TRANSPARENT);
 
-	AddTask(1000, [this]() {
-		time_string = return_current_time_and_date();
-		});
+	AddTask(1000, UpdateTime, this);
+	AddTask(16, EachSixtyFrames, this);
+
+	procs::init(hInstance);
 }
 
 Controller::~Controller() {
 	timers.stopAll();
 
-	for (auto& window : windows) {
-		DestroyWindow(window);
+	for (auto [Class, windows] : classes) {
+		for (auto window : windows) {
+			DestroyWindow(window);
+		}
+		windows.clear();
+		UnregisterClass(Class, hInstance);
 	}
-	DestroyWindow(canvas);
-	DestroyWindow(base);
+	classes.clear();
 
-	for (auto const& [name, Class] : classes) {
-		UnregisterClass(name, hInstance);
-	}
-	UnregisterClass(CANVASCLASS, hInstance);
-	UnregisterClass(HIDDENCLASS, hInstance);
+	DeleteObject(hBrush);
+	DeleteObject(hFont);
 }
 
 int Controller::run() {
@@ -79,9 +51,47 @@ int Controller::run() {
 	return int(msg.wParam);
 }
 
-void Controller::LoadWindows(const char* filepath) {
-	AddWindowTask(16, EachSixtyFrames);
+HWND Controller::AddWindow(LPCWSTR className, int x, int y, int width, int height, LPCWSTR windowName, UINT styles, UINT ExStyles, HWND parent) {
+	HWND window = CreateWidgetWindow(
+		className,
+		hInstance,
+		x, y, width, height,
+		windowName,
+		styles,
+		ExStyles,
+		parent);
+	if (ExStyles & WS_EX_LAYERED) {
+		SetLayeredWindowAttributes(window, TRANSPARENT, NULL, LWA_COLORKEY);
+	}
+	classes[className].push_back(window);
+	return window;
 }
-void Controller::LoadWindowClasses(const char* filepath) {}
+
+void Controller::LoadWindows(const char* filepath) {
+	HWND base = AddWindow(
+		L"HiddenWindow",
+		0, 0, 0, 0,
+		L"Base",
+		WS_POPUP,
+		WS_EX_NOACTIVATE | WS_EX_TRANSPARENT,
+		HWND_DESKTOP
+	);
+	HWND canvas = AddWindow(
+		L"CanvasWindow",
+		0, 0, 0, 0,
+		L"Canvas",
+		WS_POPUP | WS_MAXIMIZE | WS_VISIBLE,
+		WS_EX_LAYERED | WS_EX_TRANSPARENT,
+		base
+	);
+	AddWindow(
+		L"WidgetWindow",
+		0, 0, 100, 100,
+		L"test",
+		WS_POPUP | WS_MAXIMIZE | WS_VISIBLE | WS_CHILD,
+		WS_EX_LAYERED | WS_EX_TRANSPARENT,
+		canvas
+	);
+}
+
 void Controller::SaveWindows(const char* filepath) const {}
-void Controller::SaveWindowClasses(const char* filepath) const {}

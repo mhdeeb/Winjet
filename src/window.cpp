@@ -32,37 +32,6 @@ HWND CreateWidgetWindow(LPCWSTR className, HINSTANCE hInstance, int x, int y, in
 	return hwnd;
 }
 
-HWND CreateOverlayWindow(HINSTANCE hInstance, LPCWSTR windowName, int x, int y, int width, int height, LPCWSTR className, UINT styles, UINT ExStyles, HWND parent) {
-	HWND hwnd = CreateWidgetWindow(className,
-		hInstance,
-		x, y, width, height,
-		windowName,
-		WS_POPUP | styles,
-		WS_EX_LAYERED | ExStyles,
-		parent);
-	SetLayeredWindowAttributes(hwnd, TRANSPARENT, NULL, LWA_COLORKEY);
-	return hwnd;
-}
-
-HWND CreateHiddenWindow(HINSTANCE hInstance) {
-	HWND hwnd = CreateWidgetWindow(HIDDENCLASS,
-		hInstance,
-		0, 0, 0, 0,
-		nullptr,
-		WS_POPUP,
-		WS_EX_NOACTIVATE | WS_EX_TRANSPARENT,
-		HWND_DESKTOP);
-	return hwnd;
-}
-
-HWND CreateCanvasOverlayWindow(HINSTANCE hInstance, HWND parent) {
-	return CreateOverlayWindow(hInstance, nullptr, 0, 0, 0, 0, CANVASCLASS, WS_MAXIMIZE | WS_VISIBLE, WS_EX_TRANSPARENT, parent);
-}
-
-HWND CreateChildOverlayWindow(HINSTANCE hInstance, LPCWSTR windowName, LPCWSTR className, HWND parent, int x, int y, int width, int height, UINT styles) {
-	return CreateOverlayWindow(hInstance, windowName, x, y, width, height, className, WS_CHILDWINDOW | WS_VISIBLE | styles, NULL, parent);
-}
-
 void move(HWND hwnd, LONG x, LONG y, HWND insertAfter) {
 	RECT rect;
 	GetWindowRect(hwnd, &rect);
