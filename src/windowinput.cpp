@@ -79,19 +79,19 @@ void HandlePaint(HWND hwnd) {
 	int savedDC = SaveDC(backbufferDC);
 	SelectObject(backbufferDC, backbuffer);
 
-	HBRUSH hTmpBr = (HBRUSH)SelectObject(backbufferDC, hBrush);
-	HFONT hTmpFnt = (HFONT)SelectObject(backbufferDC, hFont);
-	SetBkMode(backbufferDC, TRANSPARENT);
-	SetTextColor(backbufferDC, RGB(128, 128, 255));
+	//HBRUSH hTmpBr = (HBRUSH)SelectObject(backbufferDC, hBrush);
+	//HFONT hTmpFnt = (HFONT)SelectObject(backbufferDC, hFont);
+	//SetBkMode(backbufferDC, TRANSPARENT);
+	//SetTextColor(backbufferDC, RGB(128, 128, 255));
 
-	FillRect(backbufferDC, &rect, hBrush);														// Clear Window
+	//FillRect(backbufferDC, &rect, hBrush);														// Clear Window
 
-	std::wstring wcommand(time_string.begin(), time_string.end());
-	const TCHAR* szBuffer = wcommand.c_str();
+	//std::wstring wcommand(time_string.begin(), time_string.end());
+	//const TCHAR* szBuffer = wcommand.c_str();
 	//RECT text(rect);
 	//text.left += 1500;
 	//text.top += 20;
-	DrawText(backbufferDC, szBuffer, int(wcommand.size()), &rect, BS_CENTER);	// Draw Text
+	//DrawText(backbufferDC, szBuffer, int(wcommand.size()), &rect, BS_CENTER);	// Draw Text
 
 	BitBlt(hDC, 0, 0, width, height, backbufferDC, 0, 0, SRCCOPY);
 	RestoreDC(backbufferDC, savedDC);
@@ -101,8 +101,8 @@ void HandlePaint(HWND hwnd) {
 	EndPaint(hwnd, &ps);
 	//SwapBuffers(hDC);
 	//ReleaseDC(hwnd, hDC);
-	DeleteObject(SelectObject(hDC, hTmpBr));
-	DeleteObject(SelectObject(hDC, hTmpFnt));
+	//DeleteObject(SelectObject(hDC, hTmpBr));
+	//DeleteObject(SelectObject(hDC, hTmpFnt));
 }
 
 input::input(HWND hwnd, HINSTANCE hInstance): hInstance(hInstance), mouse(hwnd), hwnd(hwnd) {}

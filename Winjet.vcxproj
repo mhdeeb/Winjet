@@ -26,6 +26,7 @@
     <ClCompile Include="src\my_ssql.cpp" />
     <ClCompile Include="src\paint.cpp" />
     <ClCompile Include="src\process.cpp" />
+    <ClCompile Include="src\procs.cpp" />
     <ClCompile Include="src\ssql.cpp" />
     <ClCompile Include="src\window.cpp" />
     <ClCompile Include="src\windowinput.cpp" />

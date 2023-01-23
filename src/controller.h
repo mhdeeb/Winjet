@@ -7,6 +7,13 @@
 #include <vector>
 #include <map>
 
+struct LoadData {
+	std::wstring className;
+	HWND window;
+	std::wstring id;
+	std::wstring parentId;
+};
+
 class Controller {
 private:
 	MSG msg{};
@@ -14,7 +21,7 @@ private:
 	std::string time_string;
 	HFONT hFont;
 	HBRUSH hBrush;
-	std::map<LPCWSTR, std::vector<HWND>> classes;
+	std::map<std::wstring, std::vector<HWND>, std::less<>> classes;
 	TimerQueue timers;
 	int timerCount = 0;
 public:
@@ -39,3 +46,6 @@ public:
 
 	friend void UpdateTime(Controller* cont);
 };
+
+std::wstring SerializeWindow(HWND window);
+LoadData DeSerializeWindow(const std::wstring& line, HINSTANCE hInstance);

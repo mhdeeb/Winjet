@@ -1,11 +1,10 @@
 #include "messages.h"
+#include "my_ssql.h"
+#include "printer.h"
 
 #include <WinUser.h>
 #include <windef.h>
 #include <stdio.h>
-
-#include "printer.h"
-#include "my_ssql.h"
 
 bool isMouseEvent(UINT message) {
 	switch (message) {
