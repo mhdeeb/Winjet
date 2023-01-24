@@ -1,51 +1,79 @@
 #pragma once
 
-#include "CallBackTimer.h"
-
-#include <string>
 #include <wtypes.h>
 #include <CommCtrl.h>
+#include <array>
 
-struct mouseInput {
+enum class MouseButton {
+	NONE,
+	LEFT,
+	RIGHT,
+	MIDDLE
+};
+
+struct MouseInput {
 	POINT p = {0, 0};
-	POINT delta = {0, 0};
-	bool isLeftDown = false;
-	bool isRightDown = false;
-	bool isMiddleDown = false;
 	bool inWindow = false;
-	TRACKMOUSEEVENT tracker;
-	explicit mouseInput(HWND hwnd) {
-		tracker.cbSize = sizeof(tracker);
-		tracker.hwndTrack = hwnd;
-		tracker.dwFlags = TME_LEAVE;
-		tracker.dwHoverTime = HOVER_DEFAULT;
+	std::array<bool, 4> ButtonState{};
+	std::array<bool, 4> PrevButtonState{};
+
+	void SetButtonState(MouseButton button, bool state) {
+		PrevButtonState[int(button)] = ButtonState[int(button)];
+		ButtonState[int(button)] = state;
+	}
+
+	void SetMousePosition(POINT point) {
+		p = point;
+	}
+
+	POINT GetMousePosition() const {
+		return p;
+	}
+
+	bool isButtonPressed(MouseButton button) const {
+		return ButtonState[int(button)] && !PrevButtonState[int(button)];
+	}
+
+	bool isButtonDepressed(MouseButton button) const {
+		return PrevButtonState[int(button)] && !ButtonState[int(button)];
+	}
+
+	bool isButtonDown(MouseButton button) const {
+		return ButtonState[int(button)];
 	}
 };
 
-struct keyboardInput {
-	bool isKeyDown = false;
-	WPARAM charCode = 0;
+struct KeyboardInput {
+	std::array<bool, 256> keyState{};
+	std::array<bool, 256> PrevkeyState{};
+
+	void SetKeyState(int virtualKey, bool isDown) {
+		PrevkeyState[virtualKey] = keyState[virtualKey];
+		keyState[virtualKey] = isDown;
+	}
+
+	std::array<bool, 256> GetKeyState() const {
+		return keyState;
+	}
+
+	bool isKeyPressed(int virtualKey) const {
+		return keyState[virtualKey] && !PrevkeyState[virtualKey];
+	}
+
+	bool isKeyDepressed(int virtualKey) const {
+		return PrevkeyState[virtualKey] && !keyState[virtualKey];
+	}
+
+	bool isKeyDown(int virtualKey) const {
+		return keyState[virtualKey];
+	}
 };
 
-LRESULT HandleMouse(mouseInput& mouse, HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+struct Input {
+	MouseInput mouse;
+	KeyboardInput keyboard;
+	TRACKMOUSEEVENT tracker;
+	explicit Input(HWND hwnd);
 
-LRESULT HandleKeyboard(keyboardInput& keyboard, HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-void HandlePaint(HWND hwnd);
-
-std::string return_current_time_and_date();
-
-struct input {
-	HINSTANCE hInstance;
-	mouseInput mouse;
-	keyboardInput keyboard;
-	CallBackTimer timer;
-	CallBackTimer timer2;
-	HWND hwnd;
-
-	input(HWND hwnd, HINSTANCE hInstance);
-
-	~input();
-
-	LRESULT HandleInput(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+	void HandleInput(UINT message, WPARAM wParam);
 };

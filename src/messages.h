@@ -2,8 +2,9 @@
 
 #include <Windows.h>
 
-#define WM_FRAME (WM_USER + 1)
-#define WM_60_FRAMES (WM_USER + 2)
+#define WM_MYCONST WM_USER + 300
+#define WM_FRAME (WM_MYCONST + 1)
+#define WM_60_FRAMES (WM_MYCONST + 2)
 
 bool isMouseEvent(UINT message);
 

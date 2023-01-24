@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CallBackTimer.h"
+#include "windowinput.h"
 
 #include <wtypes.h>
 #include <string>
@@ -16,12 +17,11 @@ struct LoadData {
 
 class Controller {
 private:
-	MSG msg{};
 	HINSTANCE hInstance;
 	std::string time_string;
 	HFONT hFont;
 	HBRUSH hBrush;
-	std::map<std::wstring, std::vector<HWND>, std::less<>> classes;
+	std::map<HWND, Input> windows;
 	TimerQueue timers;
 	int timerCount = 0;
 public:

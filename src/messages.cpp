@@ -100,29 +100,29 @@ void Log(UINT message, WPARAM wParam) {
 			printer::print("Mouse: LEAVE");
 			break;
 		default:
-			printer::printv("Unhandled Mouse Event: {}\n", my_ssql::code_to_name_msg(message));
+			printer::print("Unhandled Mouse Event:", my_ssql::code_to_name_msg(message));
 		}
 	} else if (isKeyboardEvent(message)) {
 		std::string key = my_ssql::code_to_name_vk(char(wParam));
 		switch (message) {
 		case WM_KEYDOWN:
 			if (!key.empty())
-				printer::printv("Key Down: {}\n", key);
+				printer::print("Key Down:", key);
 			else
-				printer::printv("Key Down: {}\n", char(wParam));
+				printer::print("Key Down:", char(wParam));
 			break;
 		case WM_KEYUP:
 			if (!key.empty())
-				printer::printv("Key Up: {}\n", key);
+				printer::print("Key Up:", key);
 			else
-				printer::printv("Key Up: {}\n", char(wParam));
+				printer::print("Key Up:", char(wParam));
 			break;
 		case WM_CHAR:
 			printf("Char: %c\n", char(wParam));
 			break;
 		default:
-			printer::printv("Unhandled Keyboard Event: {}\n", key);
+			printer::print("Unhandled Keyboard Event:", key);
 		}
 	} else
-		printer::printv("Other Event: {}\n", my_ssql::code_to_name_msg(message));
+		printer::print("Other Event:", my_ssql::code_to_name_msg(message));
 }

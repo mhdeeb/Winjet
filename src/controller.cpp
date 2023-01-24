@@ -6,12 +6,11 @@
 #include "procs.h"
 
 #include <fstream>
+#include <iostream>
 
 void EachSixtyFrames(const Controller* cont) {
-	for (auto& [Class, windows] : cont->classes) {
-		for (auto window : windows) {
-			PostMessage(window, WM_60_FRAMES, 0, 0);
-		}
+	for (auto& [hwnd, window] : cont->windows) {
+		PostMessage(hwnd, WM_60_FRAMES, 0, 0);
 	}
 }
 
@@ -31,22 +30,20 @@ Controller::Controller(HINSTANCE HInstance): hInstance(HInstance) {
 
 Controller::~Controller() {
 	timers.stopAll();
-
-	for (auto [Class, windows] : classes) {
-		for (auto window : windows) {
-			DestroyWindow(window);
-		}
-		windows.clear();
-		UnregisterClass(Class.c_str(), hInstance);
+	for (auto const& [hwnd, window] : windows) {
+		DestroyWindow(hwnd);
 	}
-	classes.clear();
-
+	windows.clear();
 	DeleteObject(hBrush);
 	DeleteObject(hFont);
 }
 
 int Controller::run() {
+	MSG msg{};
 	while (GetMessage(&msg, nullptr, 0, 0)) {
+		if (windows.contains(msg.hwnd)) {
+			windows.at(msg.hwnd).HandleInput(msg.message, msg.wParam);
+		}
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
@@ -65,7 +62,7 @@ HWND Controller::AddWindow(LPCWSTR className, int x, int y, int width, int heigh
 	if (ExStyles & WS_EX_LAYERED) {
 		SetLayeredWindowAttributes(window, TRANSPARENT, NULL, LWA_COLORKEY);
 	}
-	classes[className].push_back(window);
+	windows.try_emplace(window, window);
 	return window;
 }
 
@@ -94,7 +91,7 @@ void Controller::LoadWindows(const char* filepath) {
 	//	WS_EX_LAYERED | WS_EX_TRANSPARENT,
 	//	canvas
 	//);
-	std::map<std::wstring, HWND, std::less<>> windows;
+	std::map<std::wstring, HWND, std::less<>> parents;
 	std::wifstream file(filepath);
 	while (!file.eof()) {
 		std::wstring winString;
@@ -103,21 +100,19 @@ void Controller::LoadWindows(const char* filepath) {
 			continue;
 		}
 		auto [className, window, id, parentId] = DeSerializeWindow(winString, hInstance);
-		windows[id] = window;
-		if (windows.contains(parentId)) {
-			SetParent(window, windows[parentId]);
+		parents[id] = window;
+		if (parents.contains(parentId)) {
+			SetParent(window, parents[parentId]);
 		}
-		classes[className].push_back(window);
+		windows.try_emplace(window, window);
 	}
 	file.close();
 }
 
 void Controller::SaveWindows(const char* filepath) const {
 	std::wstringstream ss;
-	for (auto& [Class, windows] : classes) {
-		for (auto window : windows) {
-			ss << SerializeWindow(window);
-		}
+	for (auto& [hwnd, window] : windows) {
+		ss << SerializeWindow(hwnd);
 	}
 	std::wofstream file(filepath);
 	file << ss.str();

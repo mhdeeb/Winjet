@@ -3,6 +3,7 @@
 #include "process.h"
 
 #include <format>
+#include <iostream>
 
 std::string getConnectionString() {
 	exec("SqlLocalDB s ProjectModels");
@@ -10,7 +11,7 @@ std::string getConnectionString() {
 	return std::vformat("DRIVER={{SQL Server}};Server=np:\\\\.\\pipe\\LOCALDB#{}\\tsql\\query;database=Win32Const", make_format_args(server.substr(0, server.size() - 1)));
 }
 
-std::string connString = getConnectionString();
+const std::string connString = getConnectionString();
 
 std::string my_ssql::code_to_name_msg(int code) {
 	ssql sql;
@@ -20,10 +21,10 @@ std::string my_ssql::code_to_name_msg(int code) {
 	std::string result;
 
 	if (sql.isConnected()) {
-		std::string quary = std::string("SELECT name FROM Win32Msg WHERE code=") + std::to_string(code);
-		sql.quary(quary);
+		sql.quary(std::format("SELECT name FROM win32wm where code={};", code));
 		sql.getResults(result);
 	}
+
 	return result;
 }
 
@@ -35,9 +36,9 @@ std::string my_ssql::code_to_name_vk(int code) {
 	std::string result;
 
 	if (sql.isConnected()) {
-		std::string quary = std::string("SELECT name FROM Win32Vk WHERE code=") + std::to_string(code);
-		sql.quary(quary);
+		sql.quary(std::format("SELECT name FROM win32vk where code={};", code));
 		sql.getResults(result);
 	}
+
 	return result;
 }
