@@ -13,6 +13,7 @@ enum class MouseButton {
 
 struct MouseInput {
 	POINT p = {0, 0};
+	POINT dp = {0, 0};
 	bool inWindow = false;
 	std::array<bool, 4> ButtonState{};
 	std::array<bool, 4> PrevButtonState{};
@@ -23,11 +24,16 @@ struct MouseInput {
 	}
 
 	void SetMousePosition(POINT point) {
+		dp = {point.x - p.x, point.y - p.y};
 		p = point;
 	}
 
 	POINT GetMousePosition() const {
 		return p;
+	}
+
+	POINT GetDeltaMousePosition() const {
+		return dp;
 	}
 
 	bool isButtonPressed(MouseButton button) const {
@@ -72,8 +78,4 @@ struct KeyboardInput {
 struct Input {
 	MouseInput mouse;
 	KeyboardInput keyboard;
-	TRACKMOUSEEVENT tracker;
-	explicit Input(HWND hwnd);
-
-	void HandleInput(UINT message, WPARAM wParam);
 };

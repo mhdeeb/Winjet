@@ -67,6 +67,7 @@ bool isKeyboardEvent(UINT message) {
 }
 
 void Log(UINT message, WPARAM wParam) {
+	using namespace printer;
 	if (isMouseEvent(message)) {
 		switch (message) {
 		case WM_MOUSEMOVE:
@@ -97,32 +98,32 @@ void Log(UINT message, WPARAM wParam) {
 			printf("Mouse Wheel: %d\n", GET_WHEEL_DELTA_WPARAM(wParam));
 			break;
 		case WM_MOUSELEAVE:
-			printer::print("Mouse: LEAVE");
+			print("Mouse: LEAVE");
 			break;
 		default:
-			printer::print("Unhandled Mouse Event:", my_ssql::code_to_name_msg(message));
+			print("Unhandled Mouse Event:", my_ssql::code_to_name_msg(message));
 		}
 	} else if (isKeyboardEvent(message)) {
 		std::string key = my_ssql::code_to_name_vk(char(wParam));
 		switch (message) {
 		case WM_KEYDOWN:
 			if (!key.empty())
-				printer::print("Key Down:", key);
+				print("Key Down:", key);
 			else
-				printer::print("Key Down:", char(wParam));
+				print("Key Down:", char(wParam));
 			break;
 		case WM_KEYUP:
 			if (!key.empty())
-				printer::print("Key Up:", key);
+				print("Key Up:", key);
 			else
-				printer::print("Key Up:", char(wParam));
+				print("Key Up:", char(wParam));
 			break;
 		case WM_CHAR:
 			printf("Char: %c\n", char(wParam));
 			break;
 		default:
-			printer::print("Unhandled Keyboard Event:", key);
+			print("Unhandled Keyboard Event:", key);
 		}
 	} else
-		printer::print("Other Event:", my_ssql::code_to_name_msg(message));
+		print("Other Event:", my_ssql::code_to_name_msg(message));
 }

@@ -1,27 +1,18 @@
 #pragma once
 
 #include "CallBackTimer.h"
-#include "windowinput.h"
+#include "window.h"
 
 #include <wtypes.h>
 #include <string>
 #include <vector>
 #include <map>
 
-struct LoadData {
-	std::wstring className;
-	HWND window;
-	std::wstring id;
-	std::wstring parentId;
-};
-
 class Controller {
 private:
 	HINSTANCE hInstance;
 	std::string time_string;
-	HFONT hFont;
-	HBRUSH hBrush;
-	std::map<HWND, Input> windows;
+	std::map<HWND, std::shared_ptr<WindowClass>> windows;
 	TimerQueue timers;
 	int timerCount = 0;
 public:
@@ -31,12 +22,14 @@ public:
 
 	int run();
 
+	LRESULT DispatchMsg(const MSG* msg);
+
 	template<typename _FUNC, typename ... _ARGS>
 	void AddTask(int interval, _FUNC func, _ARGS...args) {
 		timers.add(timerCount++, interval, func, args...);
 	}
 
-	HWND AddWindow(LPCWSTR className, int x, int y, int width, int height, LPCWSTR windowName, UINT styles, UINT ExStyles, HWND parent);
+	void AddWindow(std::shared_ptr<WindowClass> window);
 
 	void LoadWindows(const char* filepath);
 
@@ -46,6 +39,3 @@ public:
 
 	friend void UpdateTime(Controller* cont);
 };
-
-std::wstring SerializeWindow(HWND window);
-LoadData DeSerializeWindow(const std::wstring& line, HINSTANCE hInstance);
