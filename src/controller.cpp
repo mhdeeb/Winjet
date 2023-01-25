@@ -12,6 +12,7 @@ void EachSixtyFrames(const Controller* cont) {
 
 void UpdateTime(Controller* cont) {
 	cont->time_string = return_current_time_and_date();
+	cont->SaveWindows("save/Windows");
 }
 
 Controller::Controller(HINSTANCE HInstance): hInstance(HInstance) {
@@ -50,7 +51,6 @@ void Controller::AddWindow(std::shared_ptr<WindowClass> window) {
 }
 
 void Controller::LoadWindows(const char* filepath) {
-	std::map<std::wstring, HWND, std::less<>> parents;
 	std::wifstream file(filepath);
 	while (!file.eof()) {
 		std::wstring winString;
@@ -58,11 +58,7 @@ void Controller::LoadWindows(const char* filepath) {
 		if (winString.empty()) {
 			continue;
 		}
-		auto [window, id, parentId] = WindowClass::DeSerialize(winString, hInstance);
-		parents[id] = window->GetHwnd();
-		if (parents.contains(parentId)) {
-			SetParent(window->GetHwnd(), parents[parentId]);
-		}
+		auto window = WindowClass::DeSerialize(winString, hInstance);
 		window->SetTimeString(&time_string);
 		windows[window->GetHwnd()] = window;
 	}
@@ -72,7 +68,8 @@ void Controller::LoadWindows(const char* filepath) {
 void Controller::SaveWindows(const char* filepath) const {
 	std::wstringstream ss;
 	for (auto& [hwnd, window] : windows) {
-		ss << window->Serialize();
+		if (window)
+			ss << window->Serialize();
 	}
 	std::wofstream file(filepath);
 	file << ss.str();

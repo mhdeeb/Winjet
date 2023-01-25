@@ -6,10 +6,10 @@
 
 LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	//Log(message, wParam);
-	//switch (message) {
-	//case WM_WINDOWPOSCHANGING:
-	//	((LPWINDOWPOS)lParam)->hwndInsertAfter = HWND_BOTTOM;
-	//}
+	switch (message) {
+	case WM_WINDOWPOSCHANGING:
+		((LPWINDOWPOS)lParam)->hwndInsertAfter = HWND_BOTTOM;
+	}
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
@@ -43,6 +43,8 @@ WindowClass::WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, i
 		height,
 		parent, nullptr, hInstance, nullptr
 	);
+
+	move(0, 0, HWND_BOTTOM);
 
 	if (ExStyles & WS_EX_LAYERED) {
 		SetLayeredWindowAttributes(hwnd, TRANSPARENT, NULL, LWA_COLORKEY);
@@ -97,15 +99,13 @@ std::wstring WindowClass::Serialize() const {
 	GetClassName(hwnd, className, 256);
 	UINT styles = GetWindowLong(hwnd, GWL_STYLE);
 	UINT ExStyles = GetWindowLong(hwnd, GWL_EXSTYLE);
-	const HWND& id = hwnd;
-	const HWND& parentId = GetParent(hwnd);
 
 	std::wstringstream ss;
-	ss << className << ' ' << rect.left << ' ' << rect.top << ' ' << rect.right << ' ' << rect.bottom << ' ' << windowName << ' ' << styles << ' ' << ExStyles << ' ' << id << ' ' << parentId << std::endl;
+	ss << className << ' ' << rect.left << ' ' << rect.top << ' ' << rect.right << ' ' << rect.bottom << ' ' << windowName << ' ' << styles << ' ' << ExStyles << std::endl;
 	return ss.str();
 }
 
-LoadData WindowClass::DeSerialize(const std::wstring& line, const HINSTANCE& HInstance) {
+std::shared_ptr<WindowClass> WindowClass::DeSerialize(const std::wstring& line, const HINSTANCE& HInstance) {
 	std::wstringstream ss(line);
 	std::wstring className;
 	ss >> className;
@@ -117,16 +117,10 @@ LoadData WindowClass::DeSerialize(const std::wstring& line, const HINSTANCE& HIn
 	ss >> styles;
 	UINT ExStyles;
 	ss >> ExStyles;
-	std::wstring id;
-	ss >> id;
-	std::wstring parentId;
-	ss >> parentId;
-	if (className == L"HiddenWindow") {
-		return LoadData{std::make_shared<HiddenWindow>(HInstance, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, windowName.c_str(), NULL, styles, ExStyles, HWND_DESKTOP), id, parentId};
-	} else if (className == L"CanvasWindow") {
-		return LoadData{std::make_shared<CanvasWindow>(HInstance, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, windowName.c_str(), NULL, styles, ExStyles, HWND_DESKTOP), id, parentId};
+	if (className == L"CanvasWindow") {
+		return std::make_shared<CanvasWindow>(HInstance, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, windowName.c_str(), NULL, styles, ExStyles, HWND_DESKTOP);
 	} else if (className == L"WidgetWindow") {
-		return LoadData{std::make_shared<WidgetWindow>(HInstance, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, windowName.c_str(), NULL, styles, ExStyles, HWND_DESKTOP), id, parentId};
+		return std::make_shared<WidgetWindow>(HInstance, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, windowName.c_str(), NULL, styles, ExStyles, HWND_DESKTOP);
 	} else
 		throw std::logic_error("Invalid Class Name");
 }
@@ -202,14 +196,6 @@ WidgetWindow::WidgetWindow(HINSTANCE hInstance,
 	) {}
 
 void HandlePaint(WindowClass* window) {
-	//PAINTSTRUCT ps;
-	//HDC hdc = BeginPaint(window->GetHwnd(), &ps);
-
-	// All painting occurs here, between BeginPaint and EndPaint.
-
-	//FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
-
-	//EndPaint(window->GetHwnd(), &ps);
 	PAINTSTRUCT ps;
 	HDC hDC = BeginPaint(window->GetHwnd(), &ps);
 
@@ -252,6 +238,8 @@ void HandlePaint(WindowClass* window) {
 
 bool WidgetWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	//Log(message, wParam);
+	if (GetInput().keyboard.isKeyPressed(VK_ESCAPE))
+		PostMessage(nullptr, WM_QUIT, 0, 0);
 	switch (message) {
 	case WM_MOUSEMOVE:
 		if (GetInput().mouse.isButtonDown(MouseButton::LEFT)) {
@@ -261,7 +249,6 @@ bool WidgetWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	case WM_60_FRAMES:
 		HandlePaint(this);
 		InvalidateRect(GetHwnd(), nullptr, false);
-		move(0, 0, HWND_BOTTOM);
 		return true;
 	case WM_PAINT:
 		HandlePaint(this);
@@ -275,27 +262,6 @@ bool WidgetWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		return false;
 	}
 }
-
-HiddenWindow::HiddenWindow(HINSTANCE hInstance,
-	int x, int y, int width, int height,
-	LPCWSTR windowName,
-	UINT classStyle,
-	UINT styles,
-	UINT ExStyles,
-	HWND parent,
-	std::string* time_string):
-	WindowClass(hInstance,
-		L"HiddenWindow",
-		x, y, width, height,
-		windowName,
-		classStyle,
-		styles,
-		ExStyles,
-		parent,
-		time_string
-	) {}
-
-bool HiddenWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) { return false; }
 
 CanvasWindow::CanvasWindow(HINSTANCE hInstance,
 	int x, int y, int width, int height,

@@ -42,19 +42,13 @@ public:
 
 	std::wstring Serialize() const;
 
-	static LoadData DeSerialize(const std::wstring& line, const HINSTANCE& hInstance);
+	static std::shared_ptr<WindowClass> DeSerialize(const std::wstring& line, const HINSTANCE& hInstance);
 
 	void move(LONG x, LONG y, HWND insertAfter = nullptr);
 
 	virtual bool WinProc(UINT message, WPARAM wParam, LPARAM lParam) = 0;
 
 	void HandleInput(UINT message, WPARAM wParam);
-};
-
-class HiddenWindow: public WindowClass {
-public:
-	HiddenWindow(HINSTANCE hInstance, int x, int y, int width, int height, LPCWSTR windowName = nullptr, UINT classStyle = CS_HREDRAW | CS_VREDRAW, UINT styles = WS_POPUP, UINT ExStyles = WS_EX_NOACTIVATE | WS_EX_TRANSPARENT, HWND parent = HWND_DESKTOP, std::string* time_string = nullptr);
-	bool WinProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 };
 
 class CanvasWindow: public WindowClass {
