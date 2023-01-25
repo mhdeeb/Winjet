@@ -15,8 +15,8 @@ void UpdateTime(Controller* cont) {
 }
 
 Controller::Controller(HINSTANCE HInstance): hInstance(HInstance) {
-	//AddTask(1000, UpdateTime, this);
-	//AddTask(16, EachSixtyFrames, this);
+	AddTask(1000, UpdateTime, this);
+	AddTask(16, EachSixtyFrames, this);
 }
 
 Controller::~Controller() {

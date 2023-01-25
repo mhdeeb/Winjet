@@ -2,7 +2,16 @@
 #include "messages.h"
 #include "paint.h"
 
-#include <sstream>s
+#include <sstream>
+
+LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
+	//Log(message, wParam);
+	//switch (message) {
+	//case WM_WINDOWPOSCHANGING:
+	//	((LPWINDOWPOS)lParam)->hwndInsertAfter = HWND_BOTTOM;
+	//}
+	return DefWindowProc(hwnd, message, wParam, lParam);
+}
 
 WindowClass::WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, LPCWSTR windowName, UINT classStyle, UINT styles, UINT ExStyles, HWND parent, std::string* time_string): hInstance(hInstance), className(className), time_string(time_string) {
 	WNDCLASS Class;
@@ -10,7 +19,7 @@ WindowClass::WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, i
 		WNDCLASS wndclass{};
 
 		wndclass.style = classStyle;
-		wndclass.lpfnWndProc = DefWindowProc;
+		wndclass.lpfnWndProc = proc;
 		wndclass.cbClsExtra = 0;
 		wndclass.cbWndExtra = 0;
 		wndclass.hInstance = hInstance;
@@ -193,6 +202,14 @@ WidgetWindow::WidgetWindow(HINSTANCE hInstance,
 	) {}
 
 void HandlePaint(WindowClass* window) {
+	//PAINTSTRUCT ps;
+	//HDC hdc = BeginPaint(window->GetHwnd(), &ps);
+
+	// All painting occurs here, between BeginPaint and EndPaint.
+
+	//FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
+
+	//EndPaint(window->GetHwnd(), &ps);
 	PAINTSTRUCT ps;
 	HDC hDC = BeginPaint(window->GetHwnd(), &ps);
 
@@ -210,7 +227,7 @@ void HandlePaint(WindowClass* window) {
 	SetBkMode(backbufferDC, TRANSPARENT);
 	SetTextColor(backbufferDC, RGB(128, 128, 255));
 
-	FillRect(backbufferDC, &rect, hTmpBr);
+	FillRect(backbufferDC, &rect, window->GetBrush());
 
 	std::string time_string = window->GetTimeString();
 
@@ -227,7 +244,7 @@ void HandlePaint(WindowClass* window) {
 	DeleteDC(backbufferDC);
 
 	EndPaint(window->GetHwnd(), &ps);
-	SwapBuffers(hDC);
+	//SwapBuffers(hDC);
 	ReleaseDC(window->GetHwnd(), hDC);
 	DeleteObject(SelectObject(hDC, hTmpBr));
 	DeleteObject(SelectObject(hDC, hTmpFnt));
@@ -235,22 +252,22 @@ void HandlePaint(WindowClass* window) {
 
 bool WidgetWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	//Log(message, wParam);
-	if (GetInput().mouse.isButtonDown(MouseButton::LEFT)) {
-		POINT p(GetInput().mouse.GetDeltaMousePosition());
-		move(p.x, p.y);
-	}
 	switch (message) {
+	case WM_MOUSEMOVE:
+		if (GetInput().mouse.isButtonDown(MouseButton::LEFT)) {
+			POINT p(GetInput().mouse.GetDeltaMousePosition());
+			move(p.x, p.y);
+		}
 	case WM_60_FRAMES:
 		HandlePaint(this);
 		InvalidateRect(GetHwnd(), nullptr, false);
+		move(0, 0, HWND_BOTTOM);
 		return true;
 	case WM_PAINT:
 		HandlePaint(this);
 		return true;
 	case WM_ERASEBKGND:
 		return true;
-	case WM_WINDOWPOSCHANGING:
-		((LPWINDOWPOS)lParam)->hwndInsertAfter = HWND_BOTTOM;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return true;
@@ -310,8 +327,6 @@ bool CanvasWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		return true;
 	case WM_ERASEBKGND:
 		return true;
-	case WM_WINDOWPOSCHANGING:
-		((LPWINDOWPOS)lParam)->hwndInsertAfter = HWND_BOTTOM;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return true;
