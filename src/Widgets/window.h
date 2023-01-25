@@ -1,6 +1,6 @@
 #pragma once
 
-#include "windowinput.h"
+#include "../windowinput.h"
 
 #include <wtypes.h>
 #include <string>
@@ -49,16 +49,4 @@ public:
 	virtual bool WinProc(UINT message, WPARAM wParam, LPARAM lParam) = 0;
 
 	void HandleInput(UINT message, WPARAM wParam);
-};
-
-class CanvasWindow: public WindowClass {
-public:
-	CanvasWindow(HINSTANCE hInstance, int x, int y, int width, int height, LPCWSTR windowName = nullptr, UINT classStyle = CS_HREDRAW | CS_VREDRAW, UINT styles = WS_POPUP | WS_MAXIMIZE | WS_VISIBLE | WS_CHILD, UINT ExStyles = WS_EX_LAYERED | WS_EX_TRANSPARENT, HWND parent = HWND_DESKTOP, std::string* time_string = nullptr);
-	bool WinProc(UINT message, WPARAM wParam, LPARAM lParam) override;
-};
-
-class WidgetWindow: public WindowClass {
-public:
-	WidgetWindow(HINSTANCE hInstance, int x, int y, int width, int height, LPCWSTR windowName = nullptr, UINT classStyle = CS_HREDRAW | CS_VREDRAW, UINT styles = WS_POPUP | WS_VISIBLE | WS_CHILD, UINT ExStyles = WS_EX_LAYERED, HWND parent = HWND_DESKTOP, std::string* time_string = nullptr);
-	bool WinProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 };

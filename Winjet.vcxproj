@@ -27,7 +27,9 @@
     <ClCompile Include="src\paint.cpp" />
     <ClCompile Include="src\process.cpp" />
     <ClCompile Include="src\ssql.cpp" />
-    <ClCompile Include="src\window.cpp" />
+    <ClCompile Include="src\Widgets\canvas.cpp" />
+    <ClCompile Include="src\Widgets\widget.cpp" />
+    <ClCompile Include="src\Widgets\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CallBackTimer.h" />
@@ -39,7 +41,9 @@
     <ClInclude Include="src\ssql.h" />
     <ClInclude Include="src\printer.h" />
     <ClInclude Include="src\util.h" />
-    <ClInclude Include="src\window.h" />
+    <ClInclude Include="src\Widgets\canvas.h" />
+    <ClInclude Include="src\Widgets\widget.h" />
+    <ClInclude Include="src\Widgets\window.h" />
     <ClInclude Include="src\windowinput.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Widgets">
+      <UniqueIdentifier>{ef4d7f80-605d-4d2b-b66e-4f6743585ab2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CallBackTimer.cpp">
@@ -39,8 +42,14 @@
     <ClCompile Include="src\ssql.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\window.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Widgets\widget.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Widgets\window.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Widgets\canvas.cpp">
+      <Filter>Widgets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -68,14 +77,20 @@
     <ClInclude Include="src\printer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\windowinput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\util.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Widgets\canvas.h">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Widgets\widget.h">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Widgets\window.h">
+      <Filter>Widgets</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

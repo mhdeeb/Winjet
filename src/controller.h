@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CallBackTimer.h"
-#include "window.h"
+#include "Widgets/window.h"
 
 #include <wtypes.h>
 #include <string>

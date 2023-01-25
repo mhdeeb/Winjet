@@ -1,6 +1,8 @@
 #include "controller.h"
 #include "messages.h"
 #include "util.h"
+#include "Widgets/canvas.h"
+#include "Widgets/widget.h"
 
 #include <fstream>
 
