@@ -14,7 +14,7 @@ void EachSixtyFrames(const Controller* cont) {
 
 void UpdateTime(Controller* cont) {
 	cont->time_string = return_current_time_and_date();
-	cont->SaveWindows("save/Windows");
+	cont->SaveWindows("save/Windows.txt");
 }
 
 Controller::Controller(HINSTANCE HInstance): hInstance(HInstance) {

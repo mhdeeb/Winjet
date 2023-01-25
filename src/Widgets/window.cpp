@@ -102,7 +102,7 @@ std::wstring WindowClass::Serialize() const {
 	UINT ExStyles = GetWindowLong(hwnd, GWL_EXSTYLE);
 
 	std::wstringstream ss;
-	ss << className << ' ' << rect.left << ' ' << rect.top << ' ' << rect.right << ' ' << rect.bottom << ' ' << windowName << ' ' << styles << ' ' << ExStyles << std::endl;
+	ss << className << ' ' << rect.left << ' ' << rect.top << ' ' << rect.right << ' ' << rect.bottom << ' ' << windowName << ' ' << std::hex << styles << ' ' << std::hex << ExStyles << std::endl;
 	return ss.str();
 }
 
@@ -115,9 +115,9 @@ std::shared_ptr<WindowClass> WindowClass::DeSerialize(const std::wstring& line, 
 	std::wstring windowName;
 	ss >> windowName;
 	UINT styles;
-	ss >> styles;
+	ss >> std::hex >> styles;
 	UINT ExStyles;
-	ss >> ExStyles;
+	ss >> std::hex >> ExStyles;
 	if (className == L"CanvasWindow") {
 		return std::make_shared<CanvasWindow>(HInstance, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, windowName.c_str(), NULL, styles, ExStyles, HWND_DESKTOP);
 	} else if (className == L"WidgetWindow") {
@@ -129,7 +129,14 @@ std::shared_ptr<WindowClass> WindowClass::DeSerialize(const std::wstring& line, 
 void WindowClass::move(LONG x, LONG y, HWND insertAfter) {
 	RECT rect;
 	GetWindowRect(hwnd, &rect);
-	SetWindowPos(hwnd, insertAfter, rect.left + x, rect.top + y, rect.right - rect.left, rect.bottom - rect.top, 0);
+	//POINT p{rect.left + x, rect.top + y};
+	//SIZE s{rect.right - rect.left, rect.bottom - rect.top};
+	//if (GetWindowLong(hwnd, GWL_EXSTYLE) == WS_EX_LAYERED && false) {
+	//	UpdateLayeredWindow(hwnd, nullptr, &p, &s, nullptr, nullptr, TRANSPARENT, nullptr, ULW_COLORKEY);
+	//	SetWindowPos(hwnd, insertAfter, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+	//} else {
+	SetWindowPos(hwnd, insertAfter, rect.left + x, rect.top + y, rect.right - rect.left, rect.bottom - rect.top, SWP_NOSIZE);
+	//}
 }
 
 void WindowClass::HandleInput(UINT message, WPARAM wParam) {

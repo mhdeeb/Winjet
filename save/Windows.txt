@@ -1,0 +1,2 @@
+CanvasWindow 0 0 1920 1080 Canvas d5000000 80020
+WidgetWindow 1403 105 1803 145 Widget d4000000 80000

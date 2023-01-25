@@ -124,6 +124,7 @@ void Log(UINT message, WPARAM wParam) {
 		default:
 			print("Unhandled Keyboard Event:", key);
 		}
-	} else
+	} else if (WM_60_FRAMES);
+	else
 		print("Other Event:", my_ssql::code_to_name_msg(message));
 }
