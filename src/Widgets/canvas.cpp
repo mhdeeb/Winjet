@@ -25,9 +25,9 @@ CanvasWindow::CanvasWindow(HINSTANCE hInstance,
 bool CanvasWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	//Log(message, wParam);
 	switch (message) {
-	case WM_60_FRAMES:
-		HandlePaint(this);
+	case WM_TIMER:
 		InvalidateRect(GetHwnd(), nullptr, false);
+		HandlePaint(this);
 		return true;
 	case WM_PAINT:
 		HandlePaint(this);

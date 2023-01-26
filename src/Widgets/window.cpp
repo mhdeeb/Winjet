@@ -4,10 +4,15 @@
 #include "../paint.h"
 
 #include <sstream>
+#include "../messages.h"
 
 LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	//Log(message, wParam);
 	switch (message) {
+	case WM_CREATE:
+		SetTimer(hwnd, NULL, 16, nullptr);
+	case WM_ERASEBKGND:
+		return true;
 	case WM_WINDOWPOSCHANGING:
 		((LPWINDOWPOS)lParam)->hwndInsertAfter = HWND_BOTTOM;
 	}
@@ -26,7 +31,7 @@ WindowClass::WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, i
 		wndclass.hInstance = hInstance;
 		wndclass.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
 		wndclass.hCursor = LoadCursor(nullptr, IDC_HAND);
-		wndclass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+		wndclass.hbrBackground = nullptr;
 		wndclass.lpszMenuName = nullptr;
 		wndclass.lpszClassName = className;
 
@@ -133,9 +138,9 @@ void WindowClass::move(LONG x, LONG y, HWND insertAfter) {
 	SIZE s{rect.right - rect.left, rect.bottom - rect.top};
 	if (GetWindowLong(hwnd, GWL_EXSTYLE) == WS_EX_LAYERED && false) {
 		UpdateLayeredWindow(hwnd, nullptr, &p, &s, nullptr, nullptr, TRANSPARENT, nullptr, ULW_COLORKEY);
-		SetWindowPos(hwnd, insertAfter, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+		SetWindowPos(hwnd, insertAfter, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER);
 	} else {
-		SetWindowPos(hwnd, insertAfter, rect.left + x, rect.top + y, rect.right - rect.left, rect.bottom - rect.top, SWP_NOSIZE);
+		SetWindowPos(hwnd, insertAfter, rect.left + x, rect.top + y, rect.right - rect.left, rect.bottom - rect.top, SWP_NOSIZE | SWP_NOZORDER);
 	}
 }
 

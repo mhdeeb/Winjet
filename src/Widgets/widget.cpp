@@ -2,42 +2,34 @@
 #include "../messages.h"
 
 void HandlePaint(WindowClass* window) {
-	PAINTSTRUCT ps;
-	HDC hDC = BeginPaint(window->GetHwnd(), &ps);
-
-	HDC backbufferDC = CreateCompatibleDC(hDC);
 	RECT rect;
 	GetClientRect(window->GetHwnd(), &rect);
 	int width = rect.right;
 	int height = rect.bottom;
+	PAINTSTRUCT ps;
+	HDC hDC = BeginPaint(window->GetHwnd(), &ps);
+	HDC backbufferDC = CreateCompatibleDC(hDC);
 	HBITMAP backbuffer = CreateCompatibleBitmap(hDC, width, height);
-	int savedDC = SaveDC(backbufferDC);
 	SelectObject(backbufferDC, backbuffer);
 
 	HBRUSH hTmpBr = (HBRUSH)SelectObject(backbufferDC, window->GetBrush());
 	HFONT hTmpFnt = (HFONT)SelectObject(backbufferDC, window->GetFont());
 	SetBkMode(backbufferDC, TRANSPARENT);
 	SetTextColor(backbufferDC, RGB(128, 128, 255));
-
 	FillRect(backbufferDC, &rect, window->GetBrush());
-
 	std::string time_string = *window->GetTimeString();
-
 	std::wstring wcommand(time_string.begin(), time_string.end());
 	const TCHAR* szBuffer = wcommand.c_str();
-	RECT text(rect);
-	text.left += 1500;
-	text.top += 20;
 	DrawText(backbufferDC, szBuffer, int(wcommand.size()), &rect, BS_CENTER);
 
 	BitBlt(hDC, 0, 0, width, height, backbufferDC, 0, 0, SRCCOPY);
-	RestoreDC(backbufferDC, savedDC);
 	DeleteObject(backbuffer);
 	DeleteDC(backbufferDC);
-
+	DeleteDC(hDC);
 	EndPaint(window->GetHwnd(), &ps);
+
 	//SwapBuffers(hDC);
-	ReleaseDC(window->GetHwnd(), hDC);
+	//ReleaseDC(window->GetHwnd(), hDC);
 	DeleteObject(SelectObject(hDC, hTmpBr));
 	DeleteObject(SelectObject(hDC, hTmpFnt));
 }
@@ -71,9 +63,9 @@ bool WidgetWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			POINT p(GetInput().mouse.GetDeltaMousePosition());
 			move(p.x, p.y);
 		}
-	case WM_60_FRAMES:
-		HandlePaint(this);
+	case WM_TIMER:
 		InvalidateRect(GetHwnd(), nullptr, false);
+		HandlePaint(this);
 		return true;
 	case WM_PAINT:
 		HandlePaint(this);
