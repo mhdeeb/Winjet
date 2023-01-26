@@ -16,12 +16,12 @@ void HandlePaint(WindowClass* window) {
 
 	HBRUSH hTmpBr = (HBRUSH)SelectObject(backbufferDC, window->GetBrush());
 	HFONT hTmpFnt = (HFONT)SelectObject(backbufferDC, window->GetFont());
-	SetBkMode(backbufferDC, TRANSPARENT);
+	SetBkMode(backbufferDC, TRANSPARENTC);
 	SetTextColor(backbufferDC, RGB(128, 128, 255));
 
 	FillRect(backbufferDC, &rect, window->GetBrush());
 
-	std::string time_string = window->GetTimeString();
+	std::string time_string = *window->GetTimeString();
 
 	std::wstring wcommand(time_string.begin(), time_string.end());
 	const TCHAR* szBuffer = wcommand.c_str();

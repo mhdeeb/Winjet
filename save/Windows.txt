@@ -1,2 +1,2 @@
-CanvasWindow 0 0 1920 1080 Canvas d5000000 80020
-WidgetWindow 1403 105 1803 145 Widget d4000000 80000
+WidgetWindow 1513 7 1913 47 Widget 94000000 c0000 -1
+CanvasWindow 0 0 1920 1080 Canvas 97000000 80c0000 -1

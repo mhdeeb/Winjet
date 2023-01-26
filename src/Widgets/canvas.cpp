@@ -23,7 +23,7 @@ CanvasWindow::CanvasWindow(HINSTANCE hInstance,
 	) {}
 
 bool CanvasWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
-	Log(message, wParam);
+	//Log(message, wParam);
 	switch (message) {
 	case WM_60_FRAMES:
 		HandlePaint(this);

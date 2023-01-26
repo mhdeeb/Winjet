@@ -5,13 +5,8 @@
 #include <wtypes.h>
 #include <string>
 #include <memory>
-class WindowClass;
 
-struct LoadData {
-	std::shared_ptr<WindowClass> window;
-	std::wstring id;
-	std::wstring parentId;
-};
+#define TRANSPARENTC RGB(0, 1, 0)
 
 class WindowClass {
 private:
@@ -34,7 +29,7 @@ public:
 
 	HBRUSH GetBrush() const;
 
-	std::string GetTimeString() const;
+	std::string* GetTimeString() const;
 
 	Input GetInput() const;
 
@@ -42,7 +37,7 @@ public:
 
 	std::wstring Serialize() const;
 
-	static std::shared_ptr<WindowClass> DeSerialize(const std::wstring& line, const HINSTANCE& hInstance);
+	static std::shared_ptr<WindowClass> DeSerialize(const std::wstring& line, const HINSTANCE& hInstance, int& parentId);
 
 	void move(LONG x, LONG y, HWND insertAfter = nullptr);
 
