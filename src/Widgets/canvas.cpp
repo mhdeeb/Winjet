@@ -42,7 +42,9 @@ CanvasWindow::CanvasWindow(HINSTANCE hInstance,
 		ExStyles,
 		parent
 	), brush(brush) {
-	AddComponent(std::make_shared<DigitalClock>(RECT(1000, 500, 1400, 540), paint::Pen(PS_SOLID, 1, paint::Color::GREEN), paint::Brush(paint::Color::TRANSPARENTC)));
+	AddComponent(std::make_shared<DigitalClock>(RECT(1000, 500, 1400, 540), paint::Pen(PS_SOLID, 1, paint::Color::GREEN), paint::Brush(paint::Color::RED)));
+	AddComponent(std::make_shared<DigitalClock>(RECT(500, 500, 900, 540), paint::Pen(PS_SOLID, 1, paint::Color::GREEN), paint::Brush(paint::Color::GREEN)));
+	AddComponent(std::make_shared<DigitalClock>(RECT(500, 800, 900, 840), paint::Pen(PS_SOLID, 1, paint::Color::GREEN), paint::Brush(paint::Color::BLUE)));
 }
 
 bool CanvasWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {

@@ -3,7 +3,6 @@
 //TODO: Save components in file and load them from file on startup
 //TODO: Fix bug with moving components
 //TODO: Add ability to specify DigitalClock's properties
-//TODO: Fix background color
 //TODO: parenthood is not implemented yet
 
 #define ENTRY main

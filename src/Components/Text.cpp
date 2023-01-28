@@ -6,10 +6,9 @@ void Text::paint(HDC hdc) const {
 	std::wstring wcommand(text.begin(), text.end());
 	const TCHAR* szBuffer = wcommand.c_str();
 	RECT rc(rect);
-	auto hTmpFnt = (HFONT)SelectObject(hdc, font.GetFont());
+	SelectObject(hdc, font.GetFont());
 	SetTextColor(hdc, color);
 	DrawText(hdc, szBuffer, int(wcommand.size()), &rc, BS_CENTER);
-	DeleteObject(hTmpFnt);
 }
 
 void Text::SetText(std::string_view text) {

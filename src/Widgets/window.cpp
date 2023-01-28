@@ -56,7 +56,7 @@ WindowClass::WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, i
 	move(0, 0, HWND_BOTTOM);
 
 	if (ExStyles & WS_EX_LAYERED) {
-		SetLayeredWindowAttributes(hwnd, paint::Color::TRANSPARENTC, NULL, LWA_COLORKEY);
+		SetLayeredWindowAttributes(hwnd, paint::Color::TRANSPARENTC, 255, LWA_COLORKEY | LWA_ALPHA);
 	}
 
 	tracker.cbSize = sizeof(tracker);
