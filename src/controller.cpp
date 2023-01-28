@@ -6,9 +6,7 @@
 #include <fstream>
 #include <sstream>
 
-Controller::Controller(HINSTANCE HInstance): hInstance(HInstance) {
-	AddTask(2000, [this]() { AutoSave(); });
-}
+Controller::Controller(HINSTANCE HInstance) : hInstance(HInstance) {}
 
 Controller::~Controller() {
 	timers.stopAll();
@@ -78,5 +76,5 @@ void Controller::SaveWindows(const char* filepath) const {
 }
 
 void Controller::AutoSave() const {
-	//SaveWindows("save/Windows.txt");
+	SaveWindows("save/Windows.txt");
 }

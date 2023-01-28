@@ -16,6 +16,7 @@ private:
 	TRACKMOUSEEVENT tracker;
 	Input input;
 	std::vector<std::shared_ptr<Component>> components;
+	std::shared_ptr<Component> SelectedComponent = nullptr;
 public:
 	WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, LPCWSTR windowName = nullptr, UINT classStyle = CS_HREDRAW | CS_VREDRAW, UINT styles = NULL, UINT ExStyles = NULL, HWND parent = HWND_DESKTOP);
 
@@ -40,6 +41,12 @@ public:
 	void AddComponent(std::shared_ptr<Component> component);
 
 	void RemoveComponent(std::shared_ptr<Component> component);
+
+	void SelectComponentAtPoint(const POINT& point);
+
+	void ReleaseSelectedComponent();
+
+	std::shared_ptr<Component> GetSelectedComponent() const;
 
 	std::shared_ptr<Component> GetComponentAtPoint(const POINT& point) const;
 };

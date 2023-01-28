@@ -8,12 +8,20 @@
 #include <sstream>
 #include <ranges>
 #include <algorithm>
+#include <iostream>
 
 LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	//Log(message, wParam);
 	switch (message) {
+	case WM_LBUTTONDOWN:
+		SetCapture(hwnd);
+		break;
+	case WM_LBUTTONUP:
+		ReleaseCapture();
+		break;
 	case WM_CREATE:
 		SetTimer(hwnd, NULL, 1000, nullptr);
+		return true;
 	case WM_ERASEBKGND:
 		return true;
 	case WM_WINDOWPOSCHANGING:
@@ -22,7 +30,7 @@ LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
-WindowClass::WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, LPCWSTR windowName, UINT classStyle, UINT styles, UINT ExStyles, HWND parent): hInstance(hInstance), className(className) {
+WindowClass::WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, LPCWSTR windowName, UINT classStyle, UINT styles, UINT ExStyles, HWND parent) : hInstance(hInstance), className(className) {
 	WNDCLASS Class;
 	if (!GetClassInfo(hInstance, className, &Class)) {
 		WNDCLASS wndclass{};
@@ -118,8 +126,8 @@ std::shared_ptr<WindowClass> WindowClass::DeSerialize(const std::wstring& line, 
 void WindowClass::move(LONG x, LONG y, HWND insertAfter) {
 	RECT rect;
 	GetWindowRect(hwnd, &rect);
-	POINT p{rect.left + x, rect.top + y};
-	SIZE s{rect.right - rect.left, rect.bottom - rect.top};
+	POINT p{ rect.left + x, rect.top + y };
+	SIZE s{ rect.right - rect.left, rect.bottom - rect.top };
 	if (GetWindowLong(hwnd, GWL_EXSTYLE) == WS_EX_LAYERED && false) {
 		UpdateLayeredWindow(hwnd, nullptr, &p, &s, nullptr, nullptr, TRANSPARENT, nullptr, ULW_COLORKEY);
 		SetWindowPos(hwnd, insertAfter, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER);
@@ -186,6 +194,21 @@ void WindowClass::AddComponent(std::shared_ptr<Component> component) {
 void WindowClass::RemoveComponent(std::shared_ptr<Component> component) {
 	const auto ret = std::ranges::remove(components, component);
 	components.erase(ret.begin(), ret.end());
+}
+
+void WindowClass::SelectComponentAtPoint(const POINT& point)
+{
+	SelectedComponent = GetComponentAtPoint(point);
+}
+
+void WindowClass::ReleaseSelectedComponent()
+{
+	SelectedComponent = nullptr;
+}
+
+std::shared_ptr<Component> WindowClass::GetSelectedComponent() const
+{
+	return SelectedComponent;
 }
 
 std::shared_ptr<Component> WindowClass::GetComponentAtPoint(const POINT& point) const {

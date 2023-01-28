@@ -32,7 +32,7 @@ CanvasWindow::CanvasWindow(HINSTANCE hInstance,
 	UINT classStyle,
 	UINT styles,
 	UINT ExStyles,
-	HWND parent):
+	HWND parent) :
 	WindowClass(hInstance,
 		L"CanvasWindow",
 		x, y, width, height,
@@ -48,15 +48,20 @@ CanvasWindow::CanvasWindow(HINSTANCE hInstance,
 }
 
 bool CanvasWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
-	//Log(message, wParam);
 	switch (message) {
+	case WM_LBUTTONDOWN:
+		POINT p(GetInput().mouse.GetMousePosition());
+		SelectComponentAtPoint(p);
+		return true;
+	case WM_LBUTTONUP:
+		ReleaseSelectedComponent();
+		return true;
 	case WM_MOUSEMOVE:
 		if (GetInput().mouse.isButtonDown(MouseButton::LEFT)) {
-			POINT p(GetInput().mouse.GetMousePosition());
-			if (auto c = GetComponentAtPoint(p)) {
-				c->move(GetInput().mouse.GetDeltaMousePosition());
+			if (auto c = GetSelectedComponent()) {
+				c->rmove(GetInput().mouse.GetDeltaMousePosition());
+				InvalidateRect(GetHwnd(), nullptr, false);
 			}
-			InvalidateRect(GetHwnd(), nullptr, false);
 		}
 		return true;
 	case WM_TIMER:

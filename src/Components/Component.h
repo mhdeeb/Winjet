@@ -18,8 +18,9 @@ public:
 	virtual void paint(HDC hdc) const = 0;
 	void SetPen(const paint::Pen& pen);
 	void SetBrush(const paint::Brush& brush);
-	virtual void move(const POINT& p);
-	bool IsPointInComponent(const POINT& p) const;
+	virtual void move(const POINT& point);
+	virtual void rmove(const POINT& delta);
+	bool IsPointInComponent(const POINT& point) const;
 	paint::Pen GetPen() const;
 	paint::Brush GetBrush() const;
 };

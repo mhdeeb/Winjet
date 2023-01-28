@@ -27,7 +27,7 @@ WidgetWindow::WidgetWindow(HINSTANCE hInstance,
 	UINT classStyle,
 	UINT styles,
 	UINT ExStyles,
-	HWND parent):
+	HWND parent) :
 	WindowClass(hInstance,
 		L"WidgetWindow",
 		x, y, width, height,
@@ -39,7 +39,6 @@ WidgetWindow::WidgetWindow(HINSTANCE hInstance,
 	) {}
 
 bool WidgetWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
-	//Log(message, wParam);
 	if (GetInput().keyboard.isKeyPressed(VK_ESCAPE))
 		PostMessage(nullptr, WM_QUIT, 0, 0);
 	switch (message) {
