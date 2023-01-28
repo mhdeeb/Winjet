@@ -56,10 +56,11 @@ bool CanvasWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			if (auto c = GetComponentAtPoint(p)) {
 				c->move(GetInput().mouse.GetDeltaMousePosition());
 			}
+			InvalidateRect(GetHwnd(), nullptr, false);
 		}
+		return true;
 	case WM_TIMER:
 		InvalidateRect(GetHwnd(), nullptr, false);
-		HandlePaint(this);
 		return true;
 	case WM_PAINT:
 		HandlePaint(this);

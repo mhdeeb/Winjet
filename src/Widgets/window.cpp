@@ -13,7 +13,7 @@ LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	//Log(message, wParam);
 	switch (message) {
 	case WM_CREATE:
-		SetTimer(hwnd, NULL, 16, nullptr);
+		SetTimer(hwnd, NULL, 1000, nullptr);
 	case WM_ERASEBKGND:
 		return true;
 	case WM_WINDOWPOSCHANGING:
