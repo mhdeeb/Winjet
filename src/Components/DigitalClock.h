@@ -12,7 +12,7 @@ private:
 	Text time_string;
 	CallBackTimer time_updater;
 public:
-	explicit DigitalClock(RECT rect, const paint::Pen& pen = paint::Pen(PS_SOLID, 1, RGB(0, 0, 0)), const paint::Brush& brush = paint::Brush(RGB(0, 0, 0)));
+	explicit DigitalClock(RECT rect, const paint::Pen& pen = paint::Pen(PS_SOLID, 1, RGB(0, 0, 0)), const paint::Brush& brush = paint::Brush(RGB(0, 0, 0)), HWND hwnd = nullptr);
 	~DigitalClock() override;
 	void paint(HDC hdc) const override;
 	void move(const POINT& point) override;

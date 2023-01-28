@@ -18,7 +18,7 @@ void Font::SetFont(const int iSize, const unsigned short usStyle, const fontfami
 	fontFamily = ffFamily;
 	fontName = cFontName;
 
-	LOGFONT lf{sizeof(lf)};
+	LOGFONT lf{ sizeof(lf) };
 
 	lf.lfHeight = iSize;
 	lf.lfWidth = 0;

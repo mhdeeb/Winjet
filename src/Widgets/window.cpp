@@ -19,9 +19,6 @@ LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	case WM_LBUTTONUP:
 		ReleaseCapture();
 		break;
-	case WM_CREATE:
-		SetTimer(hwnd, NULL, 1000, nullptr);
-		return true;
 	case WM_ERASEBKGND:
 		return true;
 	case WM_WINDOWPOSCHANGING:

@@ -12,10 +12,12 @@ protected:
 	paint::Pen pen;
 	paint::Brush brush;
 	static int idCounter;
+	HWND hwnd;
 public:
-	explicit Component(RECT rect, const paint::Pen& pen = paint::Pen(PS_SOLID, 1, RGB(0, 0, 0)), const paint::Brush& brush = paint::Brush(RGB(0, 0, 0)));
+	explicit Component(RECT rect, HWND hwnd = nullptr, const paint::Pen& pen = paint::Pen(PS_SOLID, 1, RGB(0, 0, 0)), const paint::Brush& brush = paint::Brush(RGB(0, 0, 0)));
 	virtual ~Component();
 	virtual void paint(HDC hdc) const = 0;
+	void Invalidate() const;
 	void SetPen(const paint::Pen& pen);
 	void SetBrush(const paint::Brush& brush);
 	virtual void move(const POINT& point);

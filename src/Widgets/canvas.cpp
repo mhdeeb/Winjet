@@ -42,9 +42,9 @@ CanvasWindow::CanvasWindow(HINSTANCE hInstance,
 		ExStyles,
 		parent
 	), brush(brush) {
-	AddComponent(std::make_shared<DigitalClock>(RECT(1000, 500, 1400, 540), paint::Pen(PS_SOLID, 1, paint::Color::GREEN), paint::Brush(paint::Color::RED)));
-	AddComponent(std::make_shared<DigitalClock>(RECT(500, 500, 900, 540), paint::Pen(PS_SOLID, 1, paint::Color::GREEN), paint::Brush(paint::Color::GREEN)));
-	AddComponent(std::make_shared<DigitalClock>(RECT(500, 800, 900, 840), paint::Pen(PS_SOLID, 1, paint::Color::GREEN), paint::Brush(paint::Color::BLUE)));
+	AddComponent(std::make_shared<DigitalClock>(RECT(1000, 500, 1400, 540), paint::Pen(PS_SOLID, 1, paint::Color::GREEN), paint::Brush(paint::Color::RED), GetHwnd()));
+	AddComponent(std::make_shared<DigitalClock>(RECT(500, 500, 900, 540), paint::Pen(PS_SOLID, 1, paint::Color::GREEN), paint::Brush(paint::Color::GREEN), GetHwnd()));
+	AddComponent(std::make_shared<DigitalClock>(RECT(500, 800, 900, 840), paint::Pen(PS_SOLID, 1, paint::Color::GREEN), paint::Brush(paint::Color::BLUE), GetHwnd()));
 }
 
 bool CanvasWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
@@ -60,12 +60,8 @@ bool CanvasWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		if (GetInput().mouse.isButtonDown(MouseButton::LEFT)) {
 			if (auto c = GetSelectedComponent()) {
 				c->rmove(GetInput().mouse.GetDeltaMousePosition());
-				InvalidateRect(GetHwnd(), nullptr, false);
 			}
 		}
-		return true;
-	case WM_TIMER:
-		InvalidateRect(GetHwnd(), nullptr, false);
 		return true;
 	case WM_PAINT:
 		HandlePaint(this);

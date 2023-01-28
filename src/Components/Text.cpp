@@ -1,6 +1,6 @@
 #include "Text.h"
 
-Text::Text(RECT rect, std::string_view text, COLORREF color, const paint::Font& font, UINT style): Component(rect), text(text), font(font), color(color), style(style) {}
+Text::Text(RECT rect, std::string_view text, HWND hwnd, COLORREF color, const paint::Font& font, UINT style) : Component(rect, hwnd), text(text), font(font), color(color), style(style) {}
 
 void Text::paint(HDC hdc) const {
 	std::wstring wcommand(text.begin(), text.end());
@@ -13,6 +13,7 @@ void Text::paint(HDC hdc) const {
 
 void Text::SetText(std::string_view text) {
 	this->text = text;
+	Invalidate();
 }
 
 std::string Text::GetText() const {
@@ -21,6 +22,7 @@ std::string Text::GetText() const {
 
 void Text::SetFont(const paint::Font& font) {
 	this->font = font;
+	Invalidate();
 }
 
 paint::Font Text::GetFont() const {
@@ -29,6 +31,7 @@ paint::Font Text::GetFont() const {
 
 void Text::SetColor(COLORREF color) {
 	this->color = color;
+	Invalidate();
 }
 
 COLORREF Text::GetColor() const {
