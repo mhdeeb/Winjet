@@ -1,12 +1,12 @@
 #pragma once
 
 #include "../windowinput.h"
+#include "../Components/Component.h"
 
 #include <wtypes.h>
 #include <string>
+#include <vector>
 #include <memory>
-
-#define TRANSPARENTC RGB(0, 1, 0)
 
 class WindowClass {
 private:
@@ -15,25 +15,15 @@ private:
 	LPCWSTR className;
 	TRACKMOUSEEVENT tracker;
 	Input input;
-	std::string* time_string;
-	HFONT hFont;
-	HBRUSH hBrush;
+	std::vector<std::shared_ptr<Component>> components;
 public:
-	WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, LPCWSTR windowName = nullptr, UINT classStyle = CS_HREDRAW | CS_VREDRAW, UINT styles = NULL, UINT ExStyles = NULL, HWND parent = HWND_DESKTOP, std::string* time_string = nullptr);
+	WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, LPCWSTR windowName = nullptr, UINT classStyle = CS_HREDRAW | CS_VREDRAW, UINT styles = NULL, UINT ExStyles = NULL, HWND parent = HWND_DESKTOP);
 
 	virtual ~WindowClass();
 
 	HWND GetHwnd() const;
 
-	HFONT GetFont() const;
-
-	HBRUSH GetBrush() const;
-
-	std::string* GetTimeString() const;
-
 	Input GetInput() const;
-
-	void SetTimeString(std::string* time_string);
 
 	std::wstring Serialize() const;
 
@@ -44,4 +34,12 @@ public:
 	virtual bool WinProc(UINT message, WPARAM wParam, LPARAM lParam) = 0;
 
 	void HandleInput(UINT message, WPARAM wParam);
+
+	void DrawComponents(const HDC& hdc) const;
+
+	void AddComponent(std::shared_ptr<Component> component);
+
+	void RemoveComponent(std::shared_ptr<Component> component);
+
+	std::shared_ptr<Component> GetComponentAtPoint(const POINT& point) const;
 };

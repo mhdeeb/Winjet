@@ -2,9 +2,12 @@
 #include "canvas.h"
 #include "widget.h"
 #include "../paint.h"
+#include "../messages.h"
+#include "../Components/DigitalClock.h"
 
 #include <sstream>
-#include "../messages.h"
+#include <ranges>
+#include <algorithm>
 
 LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	//Log(message, wParam);
@@ -19,7 +22,7 @@ LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
-WindowClass::WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, LPCWSTR windowName, UINT classStyle, UINT styles, UINT ExStyles, HWND parent, std::string* time_string): hInstance(hInstance), className(className), time_string(time_string) {
+WindowClass::WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, LPCWSTR windowName, UINT classStyle, UINT styles, UINT ExStyles, HWND parent): hInstance(hInstance), className(className) {
 	WNDCLASS Class;
 	if (!GetClassInfo(hInstance, className, &Class)) {
 		WNDCLASS wndclass{};
@@ -53,45 +56,26 @@ WindowClass::WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, i
 	move(0, 0, HWND_BOTTOM);
 
 	if (ExStyles & WS_EX_LAYERED) {
-		SetLayeredWindowAttributes(hwnd, TRANSPARENTC, NULL, LWA_COLORKEY);
+		SetLayeredWindowAttributes(hwnd, paint::Color::TRANSPARENTC, NULL, LWA_COLORKEY);
 	}
 
 	tracker.cbSize = sizeof(tracker);
 	tracker.hwndTrack = hwnd;
 	tracker.dwFlags = TME_LEAVE;
 	tracker.dwHoverTime = HOVER_DEFAULT;
-
-	SetFont(hFont, 40, BOLD, MODERN, L"Curier New");
-	hBrush = CreateSolidBrush(TRANSPARENTC);
 }
 
 WindowClass::~WindowClass() {
-	DeleteObject(hBrush);
-	DeleteObject(hFont);
+	components.clear();
+	DestroyWindow(hwnd);
 }
 
 HWND WindowClass::GetHwnd() const {
 	return hwnd;
 }
 
-HFONT WindowClass::GetFont() const {
-	return hFont;
-}
-
-HBRUSH WindowClass::GetBrush() const {
-	return hBrush;
-}
-
-std::string* WindowClass::GetTimeString() const {
-	return time_string;
-}
-
 Input WindowClass::GetInput() const {
 	return input;
-}
-
-void WindowClass::SetTimeString(std::string* time_string) {
-	this->time_string = time_string;
 }
 
 std::wstring WindowClass::Serialize() const {
@@ -124,7 +108,7 @@ std::shared_ptr<WindowClass> WindowClass::DeSerialize(const std::wstring& line, 
 	ss >> parentId;
 
 	if (className == L"CanvasWindow") {
-		return std::make_shared<CanvasWindow>(HInstance, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, windowName.c_str(), NULL, styles, ExStyles, HWND_DESKTOP);
+		return std::make_shared<CanvasWindow>(HInstance, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, paint::Brush(paint::Color::TRANSPARENTC), windowName.c_str(), NULL, styles, ExStyles, HWND_DESKTOP);
 	} else if (className == L"WidgetWindow") {
 		return std::make_shared<WidgetWindow>(HInstance, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, windowName.c_str(), NULL, styles, ExStyles, HWND_DESKTOP);
 	} else
@@ -187,4 +171,28 @@ void WindowClass::HandleInput(UINT message, WPARAM wParam) {
 	default:
 		return;
 	}
+}
+
+void WindowClass::DrawComponents(const HDC& hdc) const {
+	for (auto component : components) {
+		component->paint(hdc);
+	}
+}
+
+void WindowClass::AddComponent(std::shared_ptr<Component> component) {
+	components.push_back(component);
+}
+
+void WindowClass::RemoveComponent(std::shared_ptr<Component> component) {
+	const auto ret = std::ranges::remove(components, component);
+	components.erase(ret.begin(), ret.end());
+}
+
+std::shared_ptr<Component> WindowClass::GetComponentAtPoint(const POINT& point) const {
+	for (auto component : std::ranges::reverse_view(components)) {
+		if (component->IsPointInComponent(point)) {
+			return component;
+		}
+	}
+	return nullptr;
 }

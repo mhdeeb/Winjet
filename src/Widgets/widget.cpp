@@ -12,26 +12,13 @@ void HandlePaint(WindowClass* window) {
 	HBITMAP backbuffer = CreateCompatibleBitmap(hDC, width, height);
 	SelectObject(backbufferDC, backbuffer);
 
-	HBRUSH hTmpBr = (HBRUSH)SelectObject(backbufferDC, window->GetBrush());
-	HFONT hTmpFnt = (HFONT)SelectObject(backbufferDC, window->GetFont());
 	SetBkMode(backbufferDC, TRANSPARENT);
-	SetTextColor(backbufferDC, RGB(128, 128, 255));
-	FillRect(backbufferDC, &rect, window->GetBrush());
-	std::string time_string = *window->GetTimeString();
-	std::wstring wcommand(time_string.begin(), time_string.end());
-	const TCHAR* szBuffer = wcommand.c_str();
-	DrawText(backbufferDC, szBuffer, int(wcommand.size()), &rect, BS_CENTER);
 
 	BitBlt(hDC, 0, 0, width, height, backbufferDC, 0, 0, SRCCOPY);
 	DeleteObject(backbuffer);
 	DeleteDC(backbufferDC);
 	DeleteDC(hDC);
 	EndPaint(window->GetHwnd(), &ps);
-
-	//SwapBuffers(hDC);
-	//ReleaseDC(window->GetHwnd(), hDC);
-	DeleteObject(SelectObject(hDC, hTmpBr));
-	DeleteObject(SelectObject(hDC, hTmpFnt));
 }
 
 WidgetWindow::WidgetWindow(HINSTANCE hInstance,
@@ -40,8 +27,7 @@ WidgetWindow::WidgetWindow(HINSTANCE hInstance,
 	UINT classStyle,
 	UINT styles,
 	UINT ExStyles,
-	HWND parent,
-	std::string* time_string):
+	HWND parent):
 	WindowClass(hInstance,
 		L"WidgetWindow",
 		x, y, width, height,
@@ -49,8 +35,7 @@ WidgetWindow::WidgetWindow(HINSTANCE hInstance,
 		classStyle,
 		styles,
 		ExStyles,
-		parent,
-		time_string
+		parent
 	) {}
 
 bool WidgetWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {

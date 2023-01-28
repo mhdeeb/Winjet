@@ -1,25 +1,13 @@
 #include "controller.h"
 #include "messages.h"
-#include "util.h"
 #include "Widgets/canvas.h"
 #include "Widgets/widget.h"
 
 #include <fstream>
-
-void EachSixtyFrames(const Controller* cont) {
-	for (auto& [hwnd, window] : cont->windows) {
-		PostMessage(hwnd, WM_60_FRAMES, 0, 0);
-	}
-}
-
-void UpdateTime(Controller* cont) {
-	cont->time_string = return_current_time_and_date();
-	cont->SaveWindows("save/Windows.txt");
-}
+#include <sstream>
 
 Controller::Controller(HINSTANCE HInstance): hInstance(HInstance) {
-	AddTask(1000, UpdateTime, this);
-	//AddTask(16, EachSixtyFrames, this);
+	AddTask(2000, [this]() { AutoSave(); });
 }
 
 Controller::~Controller() {
@@ -48,7 +36,6 @@ LRESULT Controller::DispatchMsg(const MSG* msg) {
 }
 
 void Controller::AddWindow(std::shared_ptr<WindowClass> window) {
-	window->SetTimeString(&time_string);
 	windows[window->GetHwnd()] = window;
 }
 
@@ -67,7 +54,6 @@ void Controller::LoadWindows(const char* filepath) {
 		handles.push_back(window->GetHwnd());
 		if (parentId != -1)
 			SetParent(window->GetHwnd(), handles[parentId]);
-		window->SetTimeString(&time_string);
 		windows[window->GetHwnd()] = window;
 	}
 	file.close();
@@ -89,4 +75,8 @@ void Controller::SaveWindows(const char* filepath) const {
 	std::wofstream file(filepath);
 	file << ss.str();
 	file.close();
+}
+
+void Controller::AutoSave() const {
+	//SaveWindows("save/Windows.txt");
 }

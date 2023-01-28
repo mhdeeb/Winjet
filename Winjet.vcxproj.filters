@@ -16,6 +16,9 @@
     <Filter Include="Widgets">
       <UniqueIdentifier>{ef4d7f80-605d-4d2b-b66e-4f6743585ab2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{c5f6d28a-7396-4c1b-b1d1-6e38a389dff6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CallBackTimer.cpp">
@@ -50,6 +53,15 @@
     </ClCompile>
     <ClCompile Include="src\Widgets\canvas.cpp">
       <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\Component.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\DigitalClock.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\Text.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +103,15 @@
     </ClInclude>
     <ClInclude Include="src\Widgets\window.h">
       <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Component.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\DigitalClock.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Text.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,23 @@
 #include "paint.h"
 
-void SetFont(HFONT& fontObject, const int iSize, const unsigned short usStyle, const fontfamily ffFamily, const wchar_t* cFontName) {
+using namespace paint;
+
+Font::Font(int fontSize, unsigned short fontStyle, fontfamily fontFamily, const wchar_t* fontName) { SetFont(fontSize, fontStyle, fontFamily, fontName); }
+
+Font::Font(const paint::Font& font) {
+	SetFont(font.fontSize, font.fontStyle, font.fontFamily, font.fontName);
+}
+
+Font::~Font() { DeleteObject(font); }
+
+void Font::SetFont(const int iSize, const unsigned short usStyle, const fontfamily ffFamily, const wchar_t* cFontName) {
+	DeleteObject(font);
+
+	fontSize = iSize;
+	fontStyle = usStyle;
+	fontFamily = ffFamily;
+	fontName = cFontName;
+
 	LOGFONT lf{sizeof(lf)};
 
 	lf.lfHeight = iSize;
@@ -64,5 +81,45 @@ void SetFont(HFONT& fontObject, const int iSize, const unsigned short usStyle, c
 	if (cFontName)
 		wcscpy_s(lf.lfFaceName, cFontName);
 
-	fontObject = CreateFontIndirect(&lf);
+	font = CreateFontIndirect(&lf);
 }
+
+HFONT Font::GetFont() const { return font; }
+
+Brush::Brush(COLORREF brushColor) { SetBrush(brushColor); }
+
+Brush::Brush(const paint::Brush& brush) {
+	SetBrush(brush.brushColor);
+}
+
+Brush::~Brush() { DeleteObject(brush); }
+
+void Brush::SetBrush(COLORREF brushColor) {
+	DeleteObject(brush);
+
+	this->brushColor = brushColor;
+
+	brush = CreateSolidBrush(brushColor);
+}
+
+HBRUSH Brush::GetBrush() const { return brush; }
+
+Pen::Pen(int penStyle, int penWidth, COLORREF penColor) { SetPen(penStyle, penWidth, penColor); }
+
+Pen::Pen(const paint::Pen& pen) {
+	SetPen(pen.penStyle, pen.penWidth, pen.penColor);
+}
+
+Pen::~Pen() { DeleteObject(pen); }
+
+void Pen::SetPen(int penStyle, int penWidth, COLORREF penColor) {
+	DeleteObject(pen);
+
+	this->penStyle = penStyle;
+	this->penWidth = penWidth;
+	this->penColor = penColor;
+
+	pen = CreatePen(penStyle, penWidth, penColor);
+}
+
+HPEN Pen::GetPen() const { return pen; }

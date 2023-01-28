@@ -1,5 +1,4 @@
 #pragma once
-//TODO: parenthood is not implemented yet
 
 #include "CallBackTimer.h"
 #include "Widgets/window.h"
@@ -12,7 +11,6 @@
 class Controller {
 private:
 	HINSTANCE hInstance;
-	std::string time_string;
 	std::map<HWND, std::shared_ptr<WindowClass>> windows;
 	TimerQueue timers;
 	int timerCount = 0;
@@ -36,7 +34,5 @@ public:
 
 	void SaveWindows(const char* filepath) const;
 
-	friend void EachSixtyFrames(const Controller* cont);
-
-	friend void UpdateTime(Controller* cont);
+	void AutoSave() const;
 };

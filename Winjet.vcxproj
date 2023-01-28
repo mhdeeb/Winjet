@@ -20,6 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CallBackTimer.cpp" />
+    <ClCompile Include="src\Components\Component.cpp" />
+    <ClCompile Include="src\Components\DigitalClock.cpp" />
+    <ClCompile Include="src\Components\Text.cpp" />
     <ClCompile Include="src\controller.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\messages.cpp" />
@@ -33,6 +36,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CallBackTimer.h" />
+    <ClInclude Include="src\Components\Component.h" />
+    <ClInclude Include="src\Components\DigitalClock.h" />
+    <ClInclude Include="src\Components\Text.h" />
     <ClInclude Include="src\controller.h" />
     <ClInclude Include="src\messages.h" />
     <ClInclude Include="src\my_ssql.h" />
