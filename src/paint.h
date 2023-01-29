@@ -31,6 +31,14 @@ namespace paint {
 		~Font();
 		void SetFont(int fontSize, unsigned short fontStyle, fontfamily fontFamily, const wchar_t* fontName);
 		HFONT GetFont() const;
+		int GetFontSize() const;
+		unsigned short GetFontStyle() const;
+		fontfamily GetFontFamily() const;
+		const wchar_t* GetFontName() const;
+		void SetFontSize(int fontSize);
+		void SetFontStyle(unsigned short fontStyle);
+		void SetFontFamily(fontfamily fontFamily);
+		void SetFontName(const wchar_t* fontName);
 	};
 
 	class Brush {
@@ -43,6 +51,7 @@ namespace paint {
 		~Brush();
 		void SetBrush(COLORREF brushColor = RGB(0, 0, 0));
 		HBRUSH GetBrush() const;
+		COLORREF GetBrushColor() const;
 	};
 
 	class Pen {
@@ -57,6 +66,12 @@ namespace paint {
 		~Pen();
 		void SetPen(int penStyle = PS_SOLID, int penWidth = 1, COLORREF penColor = RGB(0, 0, 0));
 		HPEN GetPen() const;
+		int GetPenStyle() const;
+		int GetPenWidth() const;
+		COLORREF GetPenColor() const;
+		void SetPenStyle(int penStyle = PS_SOLID);
+		void SetPenWidth(int penWidth = 1);
+		void SetPenColor(COLORREF penColor = RGB(0, 0, 0));
 	};
 
 	enum Color {

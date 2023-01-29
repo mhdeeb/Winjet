@@ -1,1 +1,0 @@
-CanvasWindow 0 0 1920 1080 Canvas 97000000 80c0000 -1

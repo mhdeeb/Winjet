@@ -45,9 +45,6 @@
     <ClCompile Include="src\ssql.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Widgets\widget.cpp">
-      <Filter>Widgets</Filter>
-    </ClCompile>
     <ClCompile Include="src\Widgets\window.cpp">
       <Filter>Widgets</Filter>
     </ClCompile>
@@ -96,9 +93,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Widgets\canvas.h">
-      <Filter>Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Widgets\widget.h">
       <Filter>Widgets</Filter>
     </ClInclude>
     <ClInclude Include="src\Widgets\window.h">

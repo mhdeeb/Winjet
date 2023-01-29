@@ -17,8 +17,9 @@ private:
 	Input input;
 	std::vector<std::shared_ptr<Component>> components;
 	std::shared_ptr<Component> SelectedComponent = nullptr;
+	paint::Brush brush;
 public:
-	WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, LPCWSTR windowName = nullptr, UINT classStyle = CS_HREDRAW | CS_VREDRAW, UINT styles = NULL, UINT ExStyles = NULL, HWND parent = HWND_DESKTOP);
+	WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, const paint::Brush& brush, LPCWSTR windowName = nullptr, UINT classStyle = CS_HREDRAW | CS_VREDRAW, UINT styles = NULL, UINT ExStyles = NULL, HWND parent = HWND_DESKTOP);
 
 	virtual ~WindowClass();
 
@@ -27,8 +28,6 @@ public:
 	Input GetInput() const;
 
 	std::wstring Serialize() const;
-
-	static std::shared_ptr<WindowClass> DeSerialize(const std::wstring& line, const HINSTANCE& hInstance, int& parentId);
 
 	void move(LONG x, LONG y, HWND insertAfter = nullptr);
 
@@ -49,4 +48,8 @@ public:
 	std::shared_ptr<Component> GetSelectedComponent() const;
 
 	std::shared_ptr<Component> GetComponentAtPoint(const POINT& point) const;
+
+	void SetBrush(const paint::Brush& brush);
+
+	paint::Brush GetBrush() const;
 };

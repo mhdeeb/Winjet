@@ -14,12 +14,10 @@ void HandlePaint(const WindowClass* window) {
 	HBITMAP backbuffer = CreateCompatibleBitmap(hDC, width, height);
 	SelectObject(backbufferDC, backbuffer);
 	SetBkMode(backbufferDC, TRANSPARENT);
-	HBRUSH brush = CreateSolidBrush(paint::Color::TRANSPARENTC);
-	FillRect(backbufferDC, &rect, brush);
+	FillRect(backbufferDC, &rect, window->GetBrush().GetBrush());
 	window->DrawComponents(backbufferDC);
 	BitBlt(hDC, 0, 0, width, height, backbufferDC, 0, 0, SRCCOPY);
 	EndPaint(hwnd, &ps);
-	DeleteObject(brush);
 	DeleteObject(backbuffer);
 	DeleteDC(backbufferDC);
 	DeleteDC(hDC);
@@ -36,16 +34,13 @@ CanvasWindow::CanvasWindow(HINSTANCE hInstance,
 	WindowClass(hInstance,
 		L"CanvasWindow",
 		x, y, width, height,
+		brush,
 		windowName,
 		classStyle,
 		styles,
 		ExStyles,
 		parent
-	), brush(brush) {
-	AddComponent(std::make_shared<DigitalClock>(RECT(1000, 500, 1400, 540), paint::Pen(PS_SOLID, 1, paint::Color::GREEN), paint::Brush(paint::Color::RED), GetHwnd()));
-	AddComponent(std::make_shared<DigitalClock>(RECT(500, 500, 900, 540), paint::Pen(PS_SOLID, 1, paint::Color::GREEN), paint::Brush(paint::Color::GREEN), GetHwnd()));
-	AddComponent(std::make_shared<DigitalClock>(RECT(500, 800, 900, 840), paint::Pen(PS_SOLID, 1, paint::Color::GREEN), paint::Brush(paint::Color::BLUE), GetHwnd()));
-}
+	), brush(brush) {}
 
 bool CanvasWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {

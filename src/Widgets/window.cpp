@@ -1,6 +1,5 @@
 #include "window.h"
 #include "canvas.h"
-#include "widget.h"
 #include "../paint.h"
 #include "../messages.h"
 #include "../Components/DigitalClock.h"
@@ -27,7 +26,7 @@ LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
-WindowClass::WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, LPCWSTR windowName, UINT classStyle, UINT styles, UINT ExStyles, HWND parent) : hInstance(hInstance), className(className) {
+WindowClass::WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, const paint::Brush& brush, LPCWSTR windowName, UINT classStyle, UINT styles, UINT ExStyles, HWND parent) : hInstance(hInstance), className(className), brush(brush) {
 	WNDCLASS Class;
 	if (!GetClassInfo(hInstance, className, &Class)) {
 		WNDCLASS wndclass{};
@@ -96,28 +95,11 @@ std::wstring WindowClass::Serialize() const {
 	std::wstringstream ss;
 	ss << className << ' ' << rect.left << ' ' << rect.top << ' ' << rect.right << ' ' << rect.bottom << ' ' << windowName << ' ' << std::hex << styles << ' ' << std::hex << ExStyles;
 	return ss.str();
-}
-
-std::shared_ptr<WindowClass> WindowClass::DeSerialize(const std::wstring& line, const HINSTANCE& HInstance, int& parentId) {
-	std::wstringstream ss(line);
-	std::wstring className;
-	ss >> className;
-	RECT rect;
-	ss >> rect.left >> rect.top >> rect.right >> rect.bottom;
-	std::wstring windowName;
-	ss >> windowName;
-	UINT styles;
-	ss >> std::hex >> styles;
-	UINT ExStyles;
-	ss >> std::hex >> ExStyles;
-	ss >> parentId;
-
-	if (className == L"CanvasWindow") {
-		return std::make_shared<CanvasWindow>(HInstance, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, paint::Brush(paint::Color::TRANSPARENTC), windowName.c_str(), NULL, styles, ExStyles, HWND_DESKTOP);
-	} else if (className == L"WidgetWindow") {
-		return std::make_shared<WidgetWindow>(HInstance, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, windowName.c_str(), NULL, styles, ExStyles, HWND_DESKTOP);
-	} else
-		throw std::logic_error("Invalid Class Name");
+	ss << window->GetBrush().GetBrushColor() << L";\n";
+	for (auto const& widget : window->) {
+		ss << widget->Serialize() << L";\n";
+	}
+	ss << std::endl;
 }
 
 void WindowClass::move(LONG x, LONG y, HWND insertAfter) {
@@ -215,4 +197,12 @@ std::shared_ptr<Component> WindowClass::GetComponentAtPoint(const POINT& point) 
 		}
 	}
 	return nullptr;
+}
+
+void WindowClass::SetBrush(const paint::Brush& brush) {
+	this->brush = brush;
+}
+
+paint::Brush WindowClass::GetBrush() const {
+	return brush;
 }

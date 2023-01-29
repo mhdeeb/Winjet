@@ -1,17 +1,14 @@
 #pragma once
 
 #include "CallBackTimer.h"
-#include "Widgets/window.h"
+#include "Widgets/canvas.h"
 
-#include <wtypes.h>
 #include <string>
-#include <vector>
-#include <map>
 
 class Controller {
 private:
 	HINSTANCE hInstance;
-	std::map<HWND, std::shared_ptr<WindowClass>> windows;
+	std::unique_ptr<CanvasWindow> window = std::make_unique<CanvasWindow>(hInstance, 0, 0, 0, 0, paint::Brush(paint::TRANSPARENTC), L"Winjet", NULL, 0x97000000L, 0x80c0000L, HWND_DESKTOP);
 	TimerQueue timers;
 	int timerCount = 0;
 public:
@@ -21,18 +18,14 @@ public:
 
 	int run();
 
-	LRESULT DispatchMsg(const MSG* msg);
-
 	template<typename _FUNC, typename ... _ARGS>
 	void AddTask(int interval, _FUNC func, _ARGS...args) {
 		timers.add(timerCount++, interval, func, args...);
 	}
 
-	void AddWindow(std::shared_ptr<WindowClass> window);
+	void LoadData(const char* filepath);
 
-	void LoadWindows(const char* filepath);
-
-	void SaveWindows(const char* filepath) const;
+	void SaveData(const char* filepath) const;
 
 	void AutoSave() const;
 };

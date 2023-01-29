@@ -86,6 +86,46 @@ void Font::SetFont(const int iSize, const unsigned short usStyle, const fontfami
 
 HFONT Font::GetFont() const { return font; }
 
+int paint::Font::GetFontSize() const
+{
+	return fontSize;
+}
+
+unsigned short paint::Font::GetFontStyle() const
+{
+	return fontStyle;
+}
+
+fontfamily paint::Font::GetFontFamily() const
+{
+	return fontFamily;
+}
+
+const wchar_t* paint::Font::GetFontName() const
+{
+	return fontName;
+}
+
+void paint::Font::SetFontSize(int fontSize)
+{
+	SetFont(fontSize, fontStyle, fontFamily, fontName);
+}
+
+void paint::Font::SetFontStyle(unsigned short fontStyle)
+{
+	SetFont(fontSize, fontStyle, fontFamily, fontName);
+}
+
+void paint::Font::SetFontFamily(fontfamily fontFamily)
+{
+	SetFont(fontSize, fontStyle, fontFamily, fontName);
+}
+
+void paint::Font::SetFontName(const wchar_t* fontName)
+{
+	SetFont(fontSize, fontStyle, fontFamily, fontName);
+}
+
 Brush::Brush(COLORREF brushColor) { SetBrush(brushColor); }
 
 Brush::Brush(const paint::Brush& brush) {
@@ -103,6 +143,11 @@ void Brush::SetBrush(COLORREF brushColor) {
 }
 
 HBRUSH Brush::GetBrush() const { return brush; }
+
+COLORREF paint::Brush::GetBrushColor() const
+{
+	return brushColor;
+}
 
 Pen::Pen(int penStyle, int penWidth, COLORREF penColor) { SetPen(penStyle, penWidth, penColor); }
 
@@ -123,3 +168,33 @@ void Pen::SetPen(int penStyle, int penWidth, COLORREF penColor) {
 }
 
 HPEN Pen::GetPen() const { return pen; }
+
+int paint::Pen::GetPenStyle() const
+{
+	return penStyle;
+}
+
+int paint::Pen::GetPenWidth() const
+{
+	return penWidth;
+}
+
+COLORREF paint::Pen::GetPenColor() const
+{
+	return penColor;
+}
+
+void paint::Pen::SetPenStyle(int penStyle)
+{
+	SetPen(penStyle, penWidth, penColor);
+}
+
+void paint::Pen::SetPenWidth(int penWidth)
+{
+	SetPen(penStyle, penWidth, penColor);
+}
+
+void paint::Pen::SetPenColor(COLORREF penColor)
+{
+	SetPen(penStyle, penWidth, penColor);
+}
