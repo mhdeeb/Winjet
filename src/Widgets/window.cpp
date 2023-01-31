@@ -148,7 +148,6 @@ void WindowClass::DrawComponents(const HDC& hdc) const {
 }
 
 void WindowClass::AddComponent(std::shared_ptr<Component> component) {
-	component->SetHwnd(GetHwnd());
 	components.push_back(component);
 }
 

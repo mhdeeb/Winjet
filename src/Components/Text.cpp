@@ -2,22 +2,21 @@
 
 #include "../includes/json.hpp"
 
-Text::Text(RECT rect, std::wstring_view text, HWND hwnd, COLORREF color, const paint::Font& font, UINT style) : Component(rect, hwnd), text(text), font(font), color(color), style(style) {}
+Text::Text(RECT rect, std::string_view text, HWND hwnd, COLORREF color, const paint::Font& font, UINT style) : Component(rect, hwnd), text(text), font(font), color(color), style(style) {}
 
 void Text::paint(HDC hdc) const {
-	const TCHAR* szBuffer = text.c_str();
 	RECT rc(rect);
 	SelectObject(hdc, font.GetFont());
 	SetTextColor(hdc, color);
-	DrawText(hdc, szBuffer, int(text.size()), &rc, BS_CENTER);
+	DrawText(hdc, std::wstring(text.begin(), text.end()).c_str(), int(text.size()), &rc, BS_CENTER);
 }
 
-void Text::SetText(std::wstring_view text) {
+void Text::SetText(std::string_view text) {
 	this->text = text;
 	Invalidate();
 }
 
-std::wstring Text::GetText() const {
+std::string Text::GetText() const {
 	return text;
 }
 
@@ -48,7 +47,6 @@ UINT Text::GetStyle() const {
 	return style;
 }
 
-//FIX
 nlohmann::json Text::Serialize() const {
 	nlohmann::json j;
 	j["Component"] = "Text";
@@ -60,13 +58,11 @@ nlohmann::json Text::Serialize() const {
 	return j;
 }
 
-//FIX
-std::shared_ptr<Text> Text::Deserialize(const nlohmann::json& serializedText) {
+std::shared_ptr<Text> Text::Deserialize(const nlohmann::json& serializedText, HWND hwnd) {
 	auto rect = serializedText["Rect"].get<std::vector<int>>();
 	auto text = serializedText["Text"].get<std::string>();
 	auto font = paint::Font::Deserialize(serializedText["Font"]);
-	auto colortxt = serializedText["Color"].get<std::string>();
-	auto color = HexToRGB(std::wstring(colortxt.begin(), colortxt.end()));
+	auto color = HexToRGB(serializedText["Color"].get<std::string>());
 	auto style = serializedText["Style"].get<UINT>();
-	return std::make_shared<Text>(RECT{ rect[0], rect[1], rect[2], rect[3] }, std::wstring(text.begin(), text.end()), nullptr, color, font, style);
+	return std::make_shared<Text>(RECT{ rect[0], rect[1], rect[2], rect[3] }, text, hwnd, color, font, style);
 }

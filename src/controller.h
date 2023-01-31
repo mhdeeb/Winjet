@@ -23,12 +23,9 @@ public:
 		timers.add(timerCount++, interval, func, args...);
 	}
 
-	//FIX
 	void LoadData(const char* filepath);
 
-	//FIX
 	void SaveData(const char* filepath) const;
 
-	//FIX
 	void AutoSave() const;
 };

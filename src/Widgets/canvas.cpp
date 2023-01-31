@@ -2,7 +2,6 @@
 #include "../messages.h"
 #include "../Components/DigitalClock.h"
 #include "../includes/json.hpp"
-#include <iostream>
 
 void HandlePaint(const WindowClass* window) {
 	HWND hwnd = window->GetHwnd();
@@ -73,27 +72,25 @@ bool CanvasWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	}
 }
 
-//FIX
 nlohmann::json CanvasWindow::Serialize() const
 {
 	nlohmann::json j;
 	j["Component"] = "Window";
 	j["ClassName"] = "CanvasWindow";
 	int length = GetWindowTextLength(GetHwnd());
-	auto name = new wchar_t[length];
-	GetWindowTextW(GetHwnd(), name, length);
+	auto name = new wchar_t[length + 1];
+	GetWindowTextW(GetHwnd(), name, length + 1);
 	j["Name"] = name;
 	delete[] name;
 	RECT rect;
 	GetWindowRect(GetHwnd(), &rect);
 	j["Rect"] = { rect.left, rect.top, rect.right, rect.bottom };
 	j["Brush"] = brush.Serialize();
-	j["Style"] = GetWindowLong(GetHwnd(), GWL_STYLE);
-	j["ExStyle"] = GetWindowLong(GetHwnd(), GWL_EXSTYLE);
+	j["Style"] = std::format("0x{:X}", GetWindowLongPtr(GetHwnd(), GWL_STYLE));
+	j["ExStyle"] = std::format("0x{:X}", GetWindowLong(GetHwnd(), GWL_EXSTYLE));
 	return j;
 }
 
-//FIX
 std::shared_ptr<CanvasWindow> CanvasWindow::Deserialize(const nlohmann::json& data, HINSTANCE hInstance)
 {
 	auto rect = data["Rect"];

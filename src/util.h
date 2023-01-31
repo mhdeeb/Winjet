@@ -5,7 +5,7 @@
 #include "includes/json_fwd.hpp"
 #include <wtypes.h>
 
-std::wstring return_current_time_and_date();
+std::string return_current_time_and_date();
 
 class Serializable {
 public:
@@ -13,6 +13,6 @@ public:
 	virtual ~Serializable() = default;
 };
 
-COLORREF HexToRGB(std::wstring hex);
+COLORREF HexToRGB(std::string_view hex);
 
-std::wstring RGBToHex(COLORREF color);
+std::string RGBToHex(COLORREF color);

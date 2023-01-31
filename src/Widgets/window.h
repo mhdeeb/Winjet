@@ -53,6 +53,5 @@ public:
 
 	paint::Brush GetBrush() const;
 
-	//FIX
 	virtual nlohmann::json Serialize() const = 0;
 };

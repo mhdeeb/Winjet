@@ -1,11 +1,10 @@
 #include "paint.h"
 
 #include "includes/json.hpp"
-#include <iostream>
 
 using namespace paint;
 
-Font::Font(int fontSize, unsigned short fontStyle, fontfamily fontFamily, const wchar_t* fontName) { SetFont(fontSize, fontStyle, fontFamily, fontName); }
+Font::Font(int fontSize, unsigned short fontStyle, fontfamily fontFamily, std::string_view fontName) { SetFont(fontSize, fontStyle, fontFamily, fontName); }
 
 Font::Font(const paint::Font& font) {
 	SetFont(font.fontSize, font.fontStyle, font.fontFamily, font.fontName);
@@ -13,7 +12,7 @@ Font::Font(const paint::Font& font) {
 
 Font::~Font() { DeleteObject(font); }
 
-void Font::SetFont(const int iSize, const unsigned short usStyle, const fontfamily ffFamily, const wchar_t* cFontName) {
+void Font::SetFont(const int iSize, const unsigned short usStyle, const fontfamily ffFamily, std::string_view cFontName) {
 	DeleteObject(font);
 
 	fontSize = iSize;
@@ -81,9 +80,9 @@ void Font::SetFont(const int iSize, const unsigned short usStyle, const fontfami
 	}
 
 	lf.lfPitchAndFamily |= DEFAULT_PITCH;
-	if (cFontName)
-		wcscpy_s(lf.lfFaceName, cFontName);
-
+	if (cFontName.size() > 0) {
+		wcscpy_s(lf.lfFaceName, std::wstring(cFontName.begin(), cFontName.end()).c_str());
+	}
 	font = CreateFontIndirect(&lf);
 }
 
@@ -104,7 +103,7 @@ fontfamily paint::Font::GetFontFamily() const
 	return fontFamily;
 }
 
-const wchar_t* paint::Font::GetFontName() const
+std::string paint::Font::GetFontName() const
 {
 	return fontName;
 }
@@ -124,29 +123,26 @@ void paint::Font::SetFontFamily(fontfamily fontFamily)
 	SetFont(fontSize, fontStyle, fontFamily, fontName);
 }
 
-void paint::Font::SetFontName(const wchar_t* fontName)
+void paint::Font::SetFontName(const char* fontName)
 {
 	SetFont(fontSize, fontStyle, fontFamily, fontName);
 }
 
-//FIX
 nlohmann::json paint::Font::Serialize() const {
 	nlohmann::json j;
 	j["FontSize"] = fontSize;
 	j["FontStyle"] = fontStyle;
 	j["FontFamily"] = fontFamily;
-	auto fontNameStr = std::wstring(fontName);
-	j["FontName"] = std::string(fontNameStr.begin(), fontNameStr.end());
+	j["FontName"] = fontName;
 	return j;
 }
 
-//FIX
 Font paint::Font::Deserialize(const nlohmann::json& serializedFont) {
 	auto fontSize = serializedFont["FontSize"].get<int>();
 	auto fontStyle = serializedFont["FontStyle"].get<unsigned short>();
 	auto fontFamily = serializedFont["FontFamily"].get<fontfamily>();
 	auto fontName = serializedFont["FontName"].get<std::string>();
-	return Font(fontSize, fontStyle, fontFamily, std::wstring(fontName.begin(), fontName.end()).c_str());
+	return Font(fontSize, fontStyle, fontFamily, fontName);
 }
 
 Brush::Brush(COLORREF brushColor) { SetBrush(brushColor); }
@@ -177,7 +173,6 @@ COLORREF paint::Brush::GetBrushColor() const
 	return brushColor;
 }
 
-//FIX
 nlohmann::json paint::Brush::Serialize() const
 {
 	nlohmann::json j;
@@ -185,10 +180,9 @@ nlohmann::json paint::Brush::Serialize() const
 	return j;
 }
 
-//FIX
 Brush paint::Brush::Deserialize(const nlohmann::json& serializedBrush) {
-	auto s = serializedBrush["Color"].get<std::string>();
-	return Brush(HexToRGB(std::wstring(s.begin(), s.end())));
+	auto color = serializedBrush["Color"].get<std::string>();
+	return Brush(HexToRGB(color));
 }
 
 Pen::Pen(int penStyle, int penWidth, COLORREF penColor) { SetPen(penStyle, penWidth, penColor); }
@@ -241,7 +235,6 @@ void paint::Pen::SetPenColor(COLORREF penColor)
 	SetPen(penStyle, penWidth, penColor);
 }
 
-//FIX
 nlohmann::json paint::Pen::Serialize() const
 {
 	nlohmann::json j;
@@ -251,11 +244,10 @@ nlohmann::json paint::Pen::Serialize() const
 	return j;
 }
 
-//FIX
 paint::Pen paint::Pen::Deserialize(const nlohmann::json& serializedPen)
 {
 	auto style = serializedPen["Style"].get<int>();
 	auto width = serializedPen["Width"].get<int>();
-	auto s = serializedPen["Color"].get<std::string>();
-	return Pen(style, width, HexToRGB(std::wstring(s.begin(), s.end())));
+	auto color = serializedPen["Color"].get<std::string>();
+	return Pen(style, width, HexToRGB(color));
 }

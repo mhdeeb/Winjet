@@ -27,24 +27,22 @@ namespace paint {
 		int fontSize;
 		unsigned short fontStyle;
 		fontfamily fontFamily;
-		const wchar_t* fontName;
+		std::string fontName;
 	public:
-		Font(int fontSize, unsigned short fontStyle, fontfamily fontFamily, const wchar_t* fontName);
+		Font(int fontSize, unsigned short fontStyle, fontfamily fontFamily, std::string_view fontName);
 		Font(const paint::Font& font);
 		~Font() override;
-		void SetFont(int fontSize, unsigned short fontStyle, fontfamily fontFamily, const wchar_t* fontName);
+		void SetFont(int fontSize, unsigned short fontStyle, fontfamily fontFamily, std::string_view fontName);
 		HFONT GetFont() const;
 		int GetFontSize() const;
 		unsigned short GetFontStyle() const;
 		fontfamily GetFontFamily() const;
-		const wchar_t* GetFontName() const;
+		std::string GetFontName() const;
 		void SetFontSize(int fontSize);
 		void SetFontStyle(unsigned short fontStyle);
 		void SetFontFamily(fontfamily fontFamily);
-		void SetFontName(const wchar_t* fontName);
-		//FIX
+		void SetFontName(const char* fontName);
 		nlohmann::json Serialize() const override;
-		//FIX
 		static Font Deserialize(const nlohmann::json& serializedFont);
 	};
 
@@ -60,9 +58,7 @@ namespace paint {
 		HBRUSH GetBrush() const;
 		void SetBrushColor(COLORREF brushColor);
 		COLORREF GetBrushColor() const;
-		//FIX
 		nlohmann::json Serialize() const override;
-		//FIX
 		static Brush Deserialize(const nlohmann::json& serializedBrush);
 	};
 
@@ -84,9 +80,7 @@ namespace paint {
 		void SetPenStyle(int penStyle = PS_SOLID);
 		void SetPenWidth(int penWidth = 1);
 		void SetPenColor(COLORREF penColor = RGB(0, 0, 0));
-		//FIX
 		nlohmann::json Serialize() const override;
-		//FIX
 		static Pen Deserialize(const nlohmann::json& serializedPen);
 	};
 

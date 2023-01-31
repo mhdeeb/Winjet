@@ -21,7 +21,6 @@ int Controller::run() {
 	return int(msg.wParam);
 }
 
-//FIX
 void Controller::LoadData(const char* filepath) {
 	std::fstream file(filepath);
 
@@ -30,12 +29,12 @@ void Controller::LoadData(const char* filepath) {
 			if (component["ClassName"] == "CanvasWindow")
 				window = CanvasWindow::Deserialize(component, hInstance);
 		} else
-			window->AddComponent(Component::Deserialize(component));
+			window->AddComponent(Component::Deserialize(component, window->GetHwnd()));
 	}
 
 	file.close();
 }
-//FIX
+
 void Controller::SaveData(const char* filepath) const {
 	std::ofstream file(filepath);
 	nlohmann::json j;
@@ -44,10 +43,10 @@ void Controller::SaveData(const char* filepath) const {
 		if (component)
 			j.push_back(component->Serialize());
 	}
-	file << j;
+	file << j.dump(4);
 	file.close();
 }
-//FIX
+
 void Controller::AutoSave() const {
-	//SaveData("save/data2.json");
+	SaveData("save/data.json");
 }

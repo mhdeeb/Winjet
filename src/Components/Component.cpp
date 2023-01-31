@@ -26,14 +26,13 @@ void Component::SetRect(RECT rect) { this->rect = rect; Invalidate(); }
 
 RECT Component::GetRect() const { return rect; }
 
-//FIX
-std::shared_ptr<Component> Component::Deserialize(const nlohmann::json& data)
+std::shared_ptr<Component> Component::Deserialize(const nlohmann::json& data, HWND hwnd)
 {
 	std::string type = data["Component"];
 	if (type == "DigitalClock") {
-		return DigitalClock::Deserialize(data);
+		return DigitalClock::Deserialize(data, hwnd);
 	} else if (type == "Text") {
-		return Text::Deserialize(data);
+		return Text::Deserialize(data, hwnd);
 	} else {
 		return nullptr;
 	}

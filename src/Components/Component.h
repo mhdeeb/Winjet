@@ -22,15 +22,13 @@ public:
 	void SetBrush(const paint::Brush& brush);
 	virtual void move(const POINT& point);
 	virtual void rmove(const POINT& delta);
-	bool IsPointInComponent(const POINT& point) const;
+	virtual bool IsPointInComponent(const POINT& point) const;
 	paint::Pen GetPen() const;
 	paint::Brush GetBrush() const;
-	//FIX
 	nlohmann::json Serialize() const override = 0;
 	virtual void SetHwnd(HWND hwnd);
 	HWND GetHwnd() const;
 	void SetRect(RECT rect);
 	RECT GetRect() const;
-	//FIX
-	static std::shared_ptr<Component>  Deserialize(const nlohmann::json& data);
+	static std::shared_ptr<Component>  Deserialize(const nlohmann::json& data, HWND hwnd);
 };
