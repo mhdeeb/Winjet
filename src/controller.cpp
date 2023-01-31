@@ -1,8 +1,7 @@
 #include "controller.h"
-#include "Widgets/canvas.h"
+#include "includes/json.hpp"
 
 #include <fstream>
-#include <sstream>
 
 Controller::Controller(HINSTANCE HInstance) : hInstance(HInstance) {}
 
@@ -22,33 +21,33 @@ int Controller::run() {
 	return int(msg.wParam);
 }
 
+//FIX
 void Controller::LoadData(const char* filepath) {
-	std::wifstream file(filepath);
+	std::fstream file(filepath);
 
-	while (!file.eof()) {
-		std::wstring line;
-		std::getline(file, line, L';');
-		std::wstringstream ss(line);
-		COLORREF color;
-		ss >> color;
-		window->SetBrush(paint::Brush(color));
-		while (!ss.eof()) {
-			std::wstring widgetLine;
-			std::getline(ss, widgetLine, L';');
-			std::shared_ptr<Component> widget = Component::DeSerialize(widgetLine, window->GetHwnd());
-			if (widget) window->AddComponent(widget);
-		}
+	for (nlohmann::json data = nlohmann::json::parse(file); auto & component : data) {
+		if (component["Component"] == "Window") {
+			if (component["ClassName"] == "CanvasWindow")
+				window = CanvasWindow::Deserialize(component, hInstance);
+		} else
+			window->AddComponent(Component::Deserialize(component));
 	}
 
 	file.close();
 }
-
+//FIX
 void Controller::SaveData(const char* filepath) const {
-	std::wofstream file(filepath);
-	file << window->Serialize();
+	std::ofstream file(filepath);
+	nlohmann::json j;
+	j.push_back(window->Serialize());
+	for (auto const& component : *window->GetComponents()) {
+		if (component)
+			j.push_back(component->Serialize());
+	}
+	file << j;
 	file.close();
 }
-
+//FIX
 void Controller::AutoSave() const {
-	SaveData("save/data.txt");
+	//SaveData("save/data2.json");
 }

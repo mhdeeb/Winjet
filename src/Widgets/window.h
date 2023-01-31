@@ -27,8 +27,6 @@ public:
 
 	Input GetInput() const;
 
-	std::wstring Serialize() const;
-
 	void move(LONG x, LONG y, HWND insertAfter = nullptr);
 
 	virtual bool WinProc(UINT message, WPARAM wParam, LPARAM lParam) = 0;
@@ -41,6 +39,8 @@ public:
 
 	void RemoveComponent(std::shared_ptr<Component> component);
 
+	std::vector<std::shared_ptr<Component>>* GetComponents();
+
 	void SelectComponentAtPoint(const POINT& point);
 
 	void ReleaseSelectedComponent();
@@ -52,4 +52,7 @@ public:
 	void SetBrush(const paint::Brush& brush);
 
 	paint::Brush GetBrush() const;
+
+	//FIX
+	virtual nlohmann::json Serialize() const = 0;
 };

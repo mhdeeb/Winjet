@@ -1,5 +1,8 @@
 #include "paint.h"
 
+#include "includes/json.hpp"
+#include <iostream>
+
 using namespace paint;
 
 Font::Font(int fontSize, unsigned short fontStyle, fontfamily fontFamily, const wchar_t* fontName) { SetFont(fontSize, fontStyle, fontFamily, fontName); }
@@ -126,6 +129,26 @@ void paint::Font::SetFontName(const wchar_t* fontName)
 	SetFont(fontSize, fontStyle, fontFamily, fontName);
 }
 
+//FIX
+nlohmann::json paint::Font::Serialize() const {
+	nlohmann::json j;
+	j["FontSize"] = fontSize;
+	j["FontStyle"] = fontStyle;
+	j["FontFamily"] = fontFamily;
+	auto fontNameStr = std::wstring(fontName);
+	j["FontName"] = std::string(fontNameStr.begin(), fontNameStr.end());
+	return j;
+}
+
+//FIX
+Font paint::Font::Deserialize(const nlohmann::json& serializedFont) {
+	auto fontSize = serializedFont["FontSize"].get<int>();
+	auto fontStyle = serializedFont["FontStyle"].get<unsigned short>();
+	auto fontFamily = serializedFont["FontFamily"].get<fontfamily>();
+	auto fontName = serializedFont["FontName"].get<std::string>();
+	return Font(fontSize, fontStyle, fontFamily, std::wstring(fontName.begin(), fontName.end()).c_str());
+}
+
 Brush::Brush(COLORREF brushColor) { SetBrush(brushColor); }
 
 Brush::Brush(const paint::Brush& brush) {
@@ -144,9 +167,28 @@ void Brush::SetBrush(COLORREF brushColor) {
 
 HBRUSH Brush::GetBrush() const { return brush; }
 
+void paint::Brush::SetBrushColor(COLORREF brushColor)
+{
+	SetBrush(brushColor);
+}
+
 COLORREF paint::Brush::GetBrushColor() const
 {
 	return brushColor;
+}
+
+//FIX
+nlohmann::json paint::Brush::Serialize() const
+{
+	nlohmann::json j;
+	j["Color"] = RGBToHex(brushColor);
+	return j;
+}
+
+//FIX
+Brush paint::Brush::Deserialize(const nlohmann::json& serializedBrush) {
+	auto s = serializedBrush["Color"].get<std::string>();
+	return Brush(HexToRGB(std::wstring(s.begin(), s.end())));
 }
 
 Pen::Pen(int penStyle, int penWidth, COLORREF penColor) { SetPen(penStyle, penWidth, penColor); }
@@ -197,4 +239,23 @@ void paint::Pen::SetPenWidth(int penWidth)
 void paint::Pen::SetPenColor(COLORREF penColor)
 {
 	SetPen(penStyle, penWidth, penColor);
+}
+
+//FIX
+nlohmann::json paint::Pen::Serialize() const
+{
+	nlohmann::json j;
+	j["Style"] = penStyle;
+	j["Width"] = penWidth;
+	j["Color"] = RGBToHex(penColor);
+	return j;
+}
+
+//FIX
+paint::Pen paint::Pen::Deserialize(const nlohmann::json& serializedPen)
+{
+	auto style = serializedPen["Style"].get<int>();
+	auto width = serializedPen["Width"].get<int>();
+	auto s = serializedPen["Color"].get<std::string>();
+	return Pen(style, width, HexToRGB(std::wstring(s.begin(), s.end())));
 }

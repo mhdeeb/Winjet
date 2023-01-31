@@ -1,11 +1,11 @@
 #pragma once
 #include <wtypes.h>
 #include <string>
+#include <memory>
 
 #include "../paint.h"
 
-class Component
-{
+class Component : public Serializable {
 protected:
 	RECT rect;
 	int id;
@@ -15,7 +15,7 @@ protected:
 	HWND hwnd;
 public:
 	explicit Component(RECT rect, HWND hwnd = nullptr, const paint::Pen& pen = paint::Pen(PS_SOLID, 1, RGB(0, 0, 0)), const paint::Brush& brush = paint::Brush(RGB(0, 0, 0)));
-	virtual ~Component();
+	~Component() override;
 	virtual void paint(HDC hdc) const = 0;
 	void Invalidate() const;
 	void SetPen(const paint::Pen& pen);
@@ -25,4 +25,12 @@ public:
 	bool IsPointInComponent(const POINT& point) const;
 	paint::Pen GetPen() const;
 	paint::Brush GetBrush() const;
+	//FIX
+	nlohmann::json Serialize() const override = 0;
+	virtual void SetHwnd(HWND hwnd);
+	HWND GetHwnd() const;
+	void SetRect(RECT rect);
+	RECT GetRect() const;
+	//FIX
+	static std::shared_ptr<Component>  Deserialize(const nlohmann::json& data);
 };

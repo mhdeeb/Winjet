@@ -7,7 +7,6 @@
 #include <sstream>
 #include <ranges>
 #include <algorithm>
-#include <iostream>
 
 LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	//Log(message, wParam);
@@ -22,6 +21,8 @@ LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 		return true;
 	case WM_WINDOWPOSCHANGING:
 		((LPWINDOWPOS)lParam)->hwndInsertAfter = HWND_BOTTOM;
+	default:
+		break;
 	}
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
@@ -80,26 +81,6 @@ HWND WindowClass::GetHwnd() const {
 
 Input WindowClass::GetInput() const {
 	return input;
-}
-
-std::wstring WindowClass::Serialize() const {
-	WCHAR windowName[256];
-	GetWindowText(hwnd, windowName, 256);
-	RECT rect;
-	GetWindowRect(hwnd, &rect);
-	WCHAR className[256];
-	GetClassName(hwnd, className, 256);
-	UINT styles = GetWindowLong(hwnd, GWL_STYLE);
-	UINT ExStyles = GetWindowLong(hwnd, GWL_EXSTYLE);
-
-	std::wstringstream ss;
-	ss << className << ' ' << rect.left << ' ' << rect.top << ' ' << rect.right << ' ' << rect.bottom << ' ' << windowName << ' ' << std::hex << styles << ' ' << std::hex << ExStyles;
-	return ss.str();
-	ss << window->GetBrush().GetBrushColor() << L";\n";
-	for (auto const& widget : window->) {
-		ss << widget->Serialize() << L";\n";
-	}
-	ss << std::endl;
 }
 
 void WindowClass::move(LONG x, LONG y, HWND insertAfter) {
@@ -161,18 +142,24 @@ void WindowClass::HandleInput(UINT message, WPARAM wParam) {
 }
 
 void WindowClass::DrawComponents(const HDC& hdc) const {
-	for (auto component : components) {
+	for (auto& component : components) {
 		component->paint(hdc);
 	}
 }
 
 void WindowClass::AddComponent(std::shared_ptr<Component> component) {
+	component->SetHwnd(GetHwnd());
 	components.push_back(component);
 }
 
 void WindowClass::RemoveComponent(std::shared_ptr<Component> component) {
 	const auto ret = std::ranges::remove(components, component);
 	components.erase(ret.begin(), ret.end());
+}
+
+std::vector<std::shared_ptr<Component>>* WindowClass::GetComponents()
+{
+	return &components;
 }
 
 void WindowClass::SelectComponentAtPoint(const POINT& point)
@@ -191,7 +178,7 @@ std::shared_ptr<Component> WindowClass::GetSelectedComponent() const
 }
 
 std::shared_ptr<Component> WindowClass::GetComponentAtPoint(const POINT& point) const {
-	for (auto component : std::ranges::reverse_view(components)) {
+	for (auto& component : std::ranges::reverse_view(components)) {
 		if (component->IsPointInComponent(point)) {
 			return component;
 		}

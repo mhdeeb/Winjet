@@ -30,6 +30,7 @@
     <ClCompile Include="src\paint.cpp" />
     <ClCompile Include="src\process.cpp" />
     <ClCompile Include="src\ssql.cpp" />
+    <ClCompile Include="src\util.cpp" />
     <ClCompile Include="src\Widgets\canvas.cpp" />
     <ClCompile Include="src\Widgets\window.cpp" />
   </ItemGroup>
@@ -39,6 +40,8 @@
     <ClInclude Include="src\Components\DigitalClock.h" />
     <ClInclude Include="src\Components\Text.h" />
     <ClInclude Include="src\controller.h" />
+    <ClInclude Include="src\includes\json.hpp" />
+    <ClInclude Include="src\includes\json_fwd.hpp" />
     <ClInclude Include="src\messages.h" />
     <ClInclude Include="src\my_ssql.h" />
     <ClInclude Include="src\paint.h" />

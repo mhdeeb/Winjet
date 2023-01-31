@@ -1,6 +1,8 @@
 #include "canvas.h"
 #include "../messages.h"
 #include "../Components/DigitalClock.h"
+#include "../includes/json.hpp"
+#include <iostream>
 
 void HandlePaint(const WindowClass* window) {
 	HWND hwnd = window->GetHwnd();
@@ -69,4 +71,43 @@ bool CanvasWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	default:
 		return false;
 	}
+}
+
+//FIX
+nlohmann::json CanvasWindow::Serialize() const
+{
+	nlohmann::json j;
+	j["Component"] = "Window";
+	j["ClassName"] = "CanvasWindow";
+	int length = GetWindowTextLength(GetHwnd());
+	auto name = new wchar_t[length];
+	GetWindowTextW(GetHwnd(), name, length);
+	j["Name"] = name;
+	delete[] name;
+	RECT rect;
+	GetWindowRect(GetHwnd(), &rect);
+	j["Rect"] = { rect.left, rect.top, rect.right, rect.bottom };
+	j["Brush"] = brush.Serialize();
+	j["Style"] = GetWindowLong(GetHwnd(), GWL_STYLE);
+	j["ExStyle"] = GetWindowLong(GetHwnd(), GWL_EXSTYLE);
+	return j;
+}
+
+//FIX
+std::shared_ptr<CanvasWindow> CanvasWindow::Deserialize(const nlohmann::json& data, HINSTANCE hInstance)
+{
+	auto rect = data["Rect"];
+	auto brush = paint::Brush::Deserialize(data["Brush"]);
+	auto name = data["Name"].get<std::string>();
+	auto style = std::stoul(data["Style"].get<std::string>(), nullptr, 16);
+	auto exStyle = std::stoul(data["ExStyle"].get<std::string>(), nullptr, 16);
+	auto window = std::make_shared<CanvasWindow>(hInstance,
+		rect[0], rect[1], rect[2], rect[3],
+		brush,
+		std::wstring(name.begin(), name.end()).c_str(),
+		CS_HREDRAW | CS_VREDRAW,
+		style,
+		exStyle,
+		nullptr);
+	return window;
 }

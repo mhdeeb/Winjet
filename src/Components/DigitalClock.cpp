@@ -1,8 +1,12 @@
 #include "DigitalClock.h"
 #include "../util.h"
-#include <iostream>
+#include "../includes/json.hpp"
 
-DigitalClock::DigitalClock(RECT rect, const paint::Pen& pen, const paint::Brush& brush, HWND hwnd) : Component(rect, hwnd, pen, brush), time_string(rect, "0000-00-00 00:00:00", hwnd, paint::Color::TRANSPARENTC, { 40, BOLD, MODERN, L"Curier New" }, BS_CENTER) {
+#include <fstream>
+
+DigitalClock::DigitalClock(RECT rect, const paint::Pen& pen, const paint::Brush& brush, const Text& time_string, HWND hwnd) : Component(rect, hwnd, pen, brush), time_string(time_string) {
+	this->time_string.SetHwnd(hwnd);
+	this->time_string.SetRect(rect);
 	time_updater.start(16, [this]() { UpdateTime(); });
 }
 
@@ -27,4 +31,33 @@ void DigitalClock::move(const POINT& point) {
 void DigitalClock::rmove(const POINT& delta) {
 	Component::rmove(delta);
 	time_string.rmove(delta);
+}
+
+void DigitalClock::SetHwnd(HWND hwnd) {
+	Component::SetHwnd(hwnd);
+	time_string.SetHwnd(hwnd);
+}
+
+//FIX
+nlohmann::json DigitalClock::Serialize() const {
+	nlohmann::json j;
+	j["Component"] = "DigitalClock";
+	j["Rect"] = { rect.left, rect.top, rect.right, rect.bottom };
+	j["Pen"] = pen.Serialize();
+	j["Brush"] = brush.Serialize();
+	j["Text"] = time_string.Serialize();
+	return j;
+}
+
+//FIX
+std::shared_ptr<DigitalClock> DigitalClock::Deserialize(const nlohmann::json& SerializedDigitalClock) {
+	RECT rect;
+	rect.left = SerializedDigitalClock["Rect"][0];
+	rect.top = SerializedDigitalClock["Rect"][1];
+	rect.right = SerializedDigitalClock["Rect"][2];
+	rect.bottom = SerializedDigitalClock["Rect"][3];
+	paint::Pen pen = paint::Pen::Deserialize(SerializedDigitalClock["Pen"]);
+	paint::Brush brush = paint::Brush::Deserialize(SerializedDigitalClock["Brush"]);
+	Text text = *Text::Deserialize(SerializedDigitalClock["Text"]);
+	return std::make_shared<DigitalClock>(rect, pen, brush, text);
 }

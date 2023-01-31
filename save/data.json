@@ -1,0 +1,71 @@
+[
+    {
+        "Component": "Window",
+        "ClassName": "CanvasWindow",
+        "Rect": [
+            0,
+            0,
+            100,
+            100
+        ],
+        "Brush": {
+            "Color": "#000100"
+        },
+        "Name": "Winjet",
+        "Style": "0x97000000",
+        "ExStyle": "0x80C0000"
+    },
+    {
+        "Component": "Text",
+        "Rect": [
+            100,
+            100,
+            100,
+            100
+        ],
+        "Text": "this is a test text\n:D",
+        "Font": {
+            "FontSize": 40,
+            "FontStyle": 1,
+            "FontFamily": 1,
+            "FontName": "Curier New"
+        },
+        "Color": "#00FF00",
+        "Style": 768
+    },
+    {
+        "Component": "DigitalClock",
+        "Rect": [
+            200,
+            200,
+            100,
+            100
+        ],
+        "Pen": {
+            "Style": 0,
+            "Width": 1,
+            "Color": "#0000FF"
+        },
+        "Brush": {
+            "Color": "#00FFFF"
+        },
+        "Text": {
+            "Component": "Text",
+            "Rect": [
+                100,
+                100,
+                100,
+                100
+            ],
+            "Text": "this is a test text\n:D",
+            "Font": {
+                "FontSize": 40,
+                "FontStyle": 1,
+                "FontFamily": 1,
+                "FontName": "Curier New"
+            },
+            "Color": "#FF0000",
+            "Style": 768
+        }
+    }
+]

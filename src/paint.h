@@ -1,6 +1,9 @@
 #pragma once
 
 #include <Windows.h>
+#include <string>
+
+#include "util.h"
 
 // Generic Font family's
 enum fontfamily {
@@ -18,7 +21,7 @@ const unsigned char UNDERLINED = 0x04;
 const unsigned char STRIKEOUT = 0x08;
 
 namespace paint {
-	class Font {
+	class Font : public Serializable {
 	private:
 		HFONT font;
 		int fontSize;
@@ -28,7 +31,7 @@ namespace paint {
 	public:
 		Font(int fontSize, unsigned short fontStyle, fontfamily fontFamily, const wchar_t* fontName);
 		Font(const paint::Font& font);
-		~Font();
+		~Font() override;
 		void SetFont(int fontSize, unsigned short fontStyle, fontfamily fontFamily, const wchar_t* fontName);
 		HFONT GetFont() const;
 		int GetFontSize() const;
@@ -39,22 +42,31 @@ namespace paint {
 		void SetFontStyle(unsigned short fontStyle);
 		void SetFontFamily(fontfamily fontFamily);
 		void SetFontName(const wchar_t* fontName);
+		//FIX
+		nlohmann::json Serialize() const override;
+		//FIX
+		static Font Deserialize(const nlohmann::json& serializedFont);
 	};
 
-	class Brush {
+	class Brush : public Serializable {
 	private:
 		HBRUSH brush;
 		COLORREF brushColor;
 	public:
 		explicit Brush(COLORREF brushColor = RGB(0, 0, 0));
 		Brush(const paint::Brush& brush);
-		~Brush();
+		~Brush() override;
 		void SetBrush(COLORREF brushColor = RGB(0, 0, 0));
 		HBRUSH GetBrush() const;
+		void SetBrushColor(COLORREF brushColor);
 		COLORREF GetBrushColor() const;
+		//FIX
+		nlohmann::json Serialize() const override;
+		//FIX
+		static Brush Deserialize(const nlohmann::json& serializedBrush);
 	};
 
-	class Pen {
+	class Pen : public Serializable {
 	private:
 		HPEN pen;
 		int penStyle;
@@ -63,7 +75,7 @@ namespace paint {
 	public:
 		Pen(int penStyle = PS_SOLID, int penWidth = 1, COLORREF penColor = RGB(0, 0, 0));
 		Pen(const paint::Pen& pen);
-		~Pen();
+		~Pen() override;
 		void SetPen(int penStyle = PS_SOLID, int penWidth = 1, COLORREF penColor = RGB(0, 0, 0));
 		HPEN GetPen() const;
 		int GetPenStyle() const;
@@ -72,6 +84,10 @@ namespace paint {
 		void SetPenStyle(int penStyle = PS_SOLID);
 		void SetPenWidth(int penWidth = 1);
 		void SetPenColor(COLORREF penColor = RGB(0, 0, 0));
+		//FIX
+		nlohmann::json Serialize() const override;
+		//FIX
+		static Pen Deserialize(const nlohmann::json& serializedPen);
 	};
 
 	enum Color {

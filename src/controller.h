@@ -8,7 +8,7 @@
 class Controller {
 private:
 	HINSTANCE hInstance;
-	std::unique_ptr<CanvasWindow> window = std::make_unique<CanvasWindow>(hInstance, 0, 0, 0, 0, paint::Brush(paint::TRANSPARENTC), L"Winjet", NULL, 0x97000000L, 0x80c0000L, HWND_DESKTOP);
+	std::shared_ptr<CanvasWindow> window;
 	TimerQueue timers;
 	int timerCount = 0;
 public:
@@ -23,9 +23,12 @@ public:
 		timers.add(timerCount++, interval, func, args...);
 	}
 
+	//FIX
 	void LoadData(const char* filepath);
 
+	//FIX
 	void SaveData(const char* filepath) const;
 
+	//FIX
 	void AutoSave() const;
 };

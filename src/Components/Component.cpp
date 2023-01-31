@@ -1,4 +1,8 @@
 #include "Component.h"
+#include "Text.h"
+#include "DigitalClock.h"
+
+#include "../includes/json.hpp"
 
 int Component::idCounter = 0;
 
@@ -13,6 +17,27 @@ void Component::SetBrush(const paint::Brush& brush) { this->brush = brush; Inval
 paint::Pen Component::GetPen() const { return pen; }
 
 paint::Brush Component::GetBrush() const { return brush; }
+
+void Component::SetHwnd(HWND hwnd) { this->hwnd = hwnd; }
+
+HWND Component::GetHwnd() const { return hwnd; }
+
+void Component::SetRect(RECT rect) { this->rect = rect; Invalidate(); }
+
+RECT Component::GetRect() const { return rect; }
+
+//FIX
+std::shared_ptr<Component> Component::Deserialize(const nlohmann::json& data)
+{
+	std::string type = data["Component"];
+	if (type == "DigitalClock") {
+		return DigitalClock::Deserialize(data);
+	} else if (type == "Text") {
+		return Text::Deserialize(data);
+	} else {
+		return nullptr;
+	}
+}
 
 void Component::Invalidate() const { InvalidateRect(hwnd, &rect, false); }
 
