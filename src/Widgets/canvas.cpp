@@ -64,9 +64,6 @@ bool CanvasWindow::WinProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		return true;
 	case WM_ERASEBKGND:
 		return true;
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return true;
 	default:
 		return false;
 	}
@@ -102,7 +99,7 @@ std::shared_ptr<CanvasWindow> CanvasWindow::Deserialize(const nlohmann::json& da
 		rect[0], rect[1], rect[2], rect[3],
 		brush,
 		std::wstring(name.begin(), name.end()).c_str(),
-		CS_HREDRAW | CS_VREDRAW,
+		CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS | CS_SAVEBITS,
 		style,
 		exStyle,
 		nullptr);

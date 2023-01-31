@@ -1,21 +1,5 @@
 [
     {
-        "Brush": {
-            "Color": "#000100"
-        },
-        "ClassName": "CanvasWindow",
-        "Component": "Window",
-        "ExStyle": "0x80C0080",
-        "Name": "Winjet",
-        "Rect": [
-            0,
-            0,
-            1920,
-            1080
-        ],
-        "Style": "0x97000000"
-    },
-    {
         "Color": "#00FF00",
         "Component": "Text",
         "Font": {
@@ -25,10 +9,10 @@
             "FontStyle": 1
         },
         "Rect": [
-            2,
-            1,
-            802,
-            201
+            360,
+            130,
+            400,
+            80
         ],
         "Style": 768,
         "Text": "this is a test text\n:D"
@@ -44,10 +28,10 @@
             "Width": 1
         },
         "Rect": [
-            1325,
-            14,
-            800,
-            200
+            443,
+            313,
+            400,
+            40
         ],
         "Text": {
             "Color": "#FF0000",
@@ -59,13 +43,13 @@
                 "FontStyle": 1
             },
             "Rect": [
-                1325,
-                14,
-                2125,
-                214
+                443,
+                313,
+                400,
+                40
             ],
             "Style": 768,
-            "Text": "2023-01-31 08:57:13"
+            "Text": "2023-01-31 22:04:57"
         }
     }
 ]

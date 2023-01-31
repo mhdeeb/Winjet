@@ -8,9 +8,60 @@
 #include <ranges>
 #include <algorithm>
 
+void AddTrayIcon(HWND hwnd, UINT uID, UINT uCallbackMsg) {
+	NOTIFYICONDATA nid{};
+	nid.cbSize = sizeof(nid);
+	nid.hWnd = hwnd;
+	nid.uID = uID;
+	nid.uCallbackMessage = uCallbackMsg;
+	nid.uVersion = NOTIFYICON_VERSION_4;
+	nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
+	lstrcpynW(nid.szTip, L"Winjet", ARRAYSIZE(nid.szTip));
+	ExtractIconEx(L"resources\\menu.ico", 0, nullptr, &(nid.hIcon), 1);
+	if (Shell_NotifyIcon(NIM_ADD, &nid))
+		Shell_NotifyIcon(NIM_SETVERSION, &nid);
+}
+
+void RemoveTrayIcon(HWND hwnd, UINT uID) {
+	NOTIFYICONDATA nid = {};
+	nid.cbSize = sizeof(nid);
+	nid.hWnd = hwnd;
+	nid.uID = uID;
+	Shell_NotifyIcon(NIM_DELETE, &nid);
+}
+
 LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	//Log(message, wParam);
 	switch (message) {
+	case CM_TRAY:
+		switch (LOWORD(lParam)) {
+			//case NIN_SELECT:
+			//case NIN_KEYSELECT:
+		case WM_CONTEXTMENU:
+			if (HMENU hMenu = CreatePopupMenu()) {
+				InsertMenu(hMenu, 0, MF_BYPOSITION, CM_ABOUT, L"About");
+				InsertMenu(hMenu, 1, MF_BYPOSITION, CM_EXIT, L"Exit");
+				POINT pt;
+				GetCursorPos(&pt);
+				SetForegroundWindow(hwnd);
+				int cmd = TrackPopupMenu(hMenu, TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, 0, hwnd, nullptr);
+				DestroyMenu(hMenu);
+				if (cmd == CM_ABOUT)
+					MessageBox(hwnd, L"Winjet is a Widget application :)", L"About", MB_OK);
+				else if (cmd == CM_EXIT)
+					PostMessage(hwnd, WM_CLOSE, 0, 0);
+			}
+			break;
+		}
+	case WM_CREATE:
+		AddTrayIcon(hwnd, 1, CM_TRAY);
+		return true;
+	case WM_CLOSE:
+	{
+		RemoveTrayIcon(hwnd, 1);
+		PostQuitMessage(0);
+		break;
+	}
 	case WM_LBUTTONDOWN:
 		SetCapture(hwnd);
 		break;

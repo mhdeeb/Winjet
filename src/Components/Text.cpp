@@ -50,7 +50,7 @@ UINT Text::GetStyle() const {
 nlohmann::json Text::Serialize() const {
 	nlohmann::json j;
 	j["Component"] = "Text";
-	j["Rect"] = { rect.left, rect.top, rect.right, rect.bottom };
+	j["Rect"] = { rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top };
 	j["Text"] = text;
 	j["Font"] = font.Serialize();
 	j["Color"] = RGBToHex(color);
@@ -64,5 +64,5 @@ std::shared_ptr<Text> Text::Deserialize(const nlohmann::json& serializedText, HW
 	auto font = paint::Font::Deserialize(serializedText["Font"]);
 	auto color = HexToRGB(serializedText["Color"].get<std::string>());
 	auto style = serializedText["Style"].get<UINT>();
-	return std::make_shared<Text>(RECT{ rect[0], rect[1], rect[2], rect[3] }, text, hwnd, color, font, style);
+	return std::make_shared<Text>(RECT{ rect[0], rect[1], rect[0] + rect[2], rect[1] + rect[3] }, text, hwnd, color, font, style);
 }

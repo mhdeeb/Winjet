@@ -1,11 +1,15 @@
 #include "controller.h"
 
-#define ENTRY main
+#define ENTRY WinMain
 
 int WINAPI ENTRY(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd) {
+	if (FindWindow(L"CanvasWindow", L"Winjet")) {
+		MessageBox(nullptr, L"Previous instance alredy running!", L"Warning", MB_OK);
+		return 0;
+	}
 	Controller controller(hInstance);
 	controller.LoadData("save/data.json");
-	controller.AddTask(2000, [](Controller const* cont) { cont->AutoSave(); }, &controller);
 	int exitCode = controller.run();
+	controller.SaveData("save/data.json");
 	return exitCode;
 }

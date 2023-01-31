@@ -26,6 +26,4 @@ public:
 	void LoadData(const char* filepath);
 
 	void SaveData(const char* filepath) const;
-
-	void AutoSave() const;
 };

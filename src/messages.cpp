@@ -70,11 +70,13 @@ void Log(UINT message, WPARAM wParam) {
 	using namespace printer;
 	if (isMouseEvent(message)) {
 		switch (message) {
+		case WM_LBUTTONDBLCLK:
+			print("WM_LBUTTONDBLCLK");
+			break;
 		case WM_MOUSEMOVE:
 			POINT p;
 			GetCursorPos(&p);
-			printf("\rMouse Position: (%d, %d)\n", int(p.x), int(p.y));
-			fflush(stdout);
+			printv("WM_MOUSEMOVE: ({}, {})\n", p.x, p.y);
 			break;
 		case WM_LBUTTONDOWN:
 			printf("Mouse Button: LEFT_DOWN\n");
