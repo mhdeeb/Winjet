@@ -34,10 +34,10 @@ void Ball::UpdatePhysics() {
 			vy *= FRICTION_FACTOR;
 			rmove({ rc.right - rect.right, 0 });
 		}
-		if (rect.bottom > rc.bottom - 50) {
+		if (rect.bottom > rc.bottom) {
 			vx *= FRICTION_FACTOR;
 			vy = -int(abs(vy * RESITUTION_FACTOR));
-			rmove({ 0, rc.bottom - rect.bottom - 50 });
+			rmove({ 0, rc.bottom - rect.bottom });
 		} else if (rect.top < rc.top) {
 			vx *= FRICTION_FACTOR;
 			vy = int(abs(vy * RESITUTION_FACTOR));

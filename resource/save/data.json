@@ -1,23 +1,5 @@
 [
     {
-        "Color": "#00FF00",
-        "Component": "Text",
-        "Font": {
-            "FontFamily": 0,
-            "FontName": "JetBrainsMono Nerd Font Mono",
-            "FontSize": 40,
-            "FontStyle": 0
-        },
-        "Rect": [
-            10,
-            50,
-            400,
-            80
-        ],
-        "Style": 768,
-        "Text": "Hello 😀"
-    },
-    {
         "Brush": {
             "Color": "#000100"
         },
@@ -28,8 +10,8 @@
             "Width": 1
         },
         "Rect": [
-            10,
-            7,
+            4,
+            3,
             0,
             0
         ],
@@ -38,19 +20,37 @@
             "Component": "Text",
             "Font": {
                 "FontFamily": 1,
-                "FontName": "Curier New",
+                "FontName": "JetBrainsMono Nerd Font Mono",
                 "FontSize": 40,
                 "FontStyle": 1
             },
             "Rect": [
-                10,
-                7,
-                400,
-                40
+                4,
+                3,
+                460,
+                80
             ],
             "Style": 768,
-            "Text": "2023-02-01 09:02:15"
+            "Text": "2023-02-01 06:19:57 PM\nWed"
         }
+    },
+    {
+        "Color": "#00FF00",
+        "Component": "Text",
+        "Font": {
+            "FontFamily": 0,
+            "FontName": "JetBrainsMono Nerd Font Mono",
+            "FontSize": 40,
+            "FontStyle": 0
+        },
+        "Rect": [
+            3,
+            87,
+            400,
+            80
+        ],
+        "Style": 768,
+        "Text": "Hello 😀"
     },
     {
         "Brush": {
@@ -63,8 +63,8 @@
             "Width": 5
         },
         "Rect": [
-            1639,
-            930,
+            1221,
+            980,
             100,
             100
         ]

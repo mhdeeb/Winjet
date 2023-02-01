@@ -30,6 +30,27 @@ void RemoveTrayIcon(HWND hwnd, UINT uID) {
 	Shell_NotifyIcon(NIM_DELETE, &nid);
 }
 
+void ShowContextMenu(HWND hwnd, POINT pt) {
+	if (HMENU hMenu = CreatePopupMenu()) {
+		InsertMenu(hMenu, 0, MF_BYPOSITION, CM_ABOUT, L"About");
+		InsertMenu(hMenu, 1, MF_BYPOSITION, CM_EXIT, L"Exit");
+		SetForegroundWindow(hwnd);
+		int cmd = TrackPopupMenu(hMenu, TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, 0, hwnd, nullptr);
+		DestroyMenu(hMenu);
+		if (cmd == CM_ABOUT)
+			MessageBox(hwnd, L"Winjet is a Widget application :)", L"About", MB_OK);
+		else if (cmd == CM_EXIT)
+			PostMessage(hwnd, WM_CLOSE, 0, 0);
+	}
+}
+
+void ToggleTaskBar(HWND hwnd, bool show) {
+	APPBARDATA abd = { sizeof abd };
+	abd.lParam = show ? ABS_ALWAYSONTOP : ABS_AUTOHIDE;
+	SHAppBarMessage(ABM_SETSTATE, &abd);
+	SHAppBarMessage(ABM_WINDOWPOSCHANGED, &abd);
+}
+
 LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	//Log(message, wParam);
 	switch (message) {
@@ -38,30 +59,20 @@ LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 			//case NIN_SELECT:
 			//case NIN_KEYSELECT:
 		case WM_CONTEXTMENU:
-			if (HMENU hMenu = CreatePopupMenu()) {
-				InsertMenu(hMenu, 0, MF_BYPOSITION, CM_ABOUT, L"About");
-				InsertMenu(hMenu, 1, MF_BYPOSITION, CM_EXIT, L"Exit");
-				POINT pt;
-				GetCursorPos(&pt);
-				SetForegroundWindow(hwnd);
-				int cmd = TrackPopupMenu(hMenu, TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, 0, hwnd, nullptr);
-				DestroyMenu(hMenu);
-				if (cmd == CM_ABOUT)
-					MessageBox(hwnd, L"Winjet is a Widget application :)", L"About", MB_OK);
-				else if (cmd == CM_EXIT)
-					PostMessage(hwnd, WM_CLOSE, 0, 0);
-			}
+			POINT pt;
+			GetCursorPos(&pt);
+			ShowContextMenu(hwnd, pt);
 			break;
 		}
 	case WM_CREATE:
 		AddTrayIcon(hwnd, 1, CM_TRAY);
-		return true;
+		ToggleTaskBar(hwnd, false);
+		break;
 	case WM_CLOSE:
-	{
 		RemoveTrayIcon(hwnd, 1);
+		ToggleTaskBar(hwnd, true);
 		PostQuitMessage(0);
 		break;
-	}
 	case WM_LBUTTONDOWN:
 		SetCapture(hwnd);
 		break;

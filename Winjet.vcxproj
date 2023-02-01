@@ -167,7 +167,7 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>pwsh.exe -command "copy $(ProjectDir)resource\ $(OutDir) -r -fo"</Command>
+      <Command>pwsh.exe -NoProfile -command "copy $(ProjectDir)resource\ $(OutDir) -r -fo"</Command>
       <Message>copying resouces</Message>
     </PostBuildEvent>
     <CustomBuildStep>

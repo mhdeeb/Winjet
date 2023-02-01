@@ -1,7 +1,7 @@
 #include "util.h"
 
 std::string return_current_time_and_date() {
-	return std::format("{:%Y-%m-%d %X}", std::chrono::current_zone()->to_local(std::chrono::system_clock::now()));
+	return std::format("{:%Y-%m-%d %r\n%a}", std::chrono::current_zone()->to_local(std::chrono::system_clock::now()));
 }
 
 COLORREF HexToRGB(std::string_view hex) {
