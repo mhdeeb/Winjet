@@ -165,9 +165,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Winjet\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>pwsh.exe -NoProfile -command "copy $(ProjectDir)resource\ $(OutDir) -r -fo"</Command>
+      <Command>pwsh.exe -NoProfile -command "copy $(ProjectDir)resource\ $(OutDir)Winjet\ -r -fo"</Command>
       <Message>copying resouces</Message>
     </PostBuildEvent>
     <CustomBuildStep>

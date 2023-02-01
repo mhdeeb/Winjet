@@ -56,7 +56,9 @@ LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
 	case CM_TRAY:
 		switch (LOWORD(lParam)) {
-			//case NIN_SELECT:
+		case NIN_SELECT:
+			PostMessage(hwnd, WM_CLOSE, 0, 0);
+			break;
 			//case NIN_KEYSELECT:
 		case WM_CONTEXTMENU:
 			POINT pt;
