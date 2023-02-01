@@ -17,7 +17,7 @@ void AddTrayIcon(HWND hwnd, UINT uID, UINT uCallbackMsg) {
 	nid.uVersion = NOTIFYICON_VERSION_4;
 	nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
 	lstrcpynW(nid.szTip, L"Winjet", ARRAYSIZE(nid.szTip));
-	ExtractIconEx(L"resources\\menu.ico", 0, nullptr, &(nid.hIcon), 1);
+	ExtractIconEx(L"resource/icon/menu.ico", 0, nullptr, &(nid.hIcon), 1);
 	if (Shell_NotifyIcon(NIM_ADD, &nid))
 		Shell_NotifyIcon(NIM_SETVERSION, &nid);
 }

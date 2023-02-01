@@ -8,8 +8,8 @@ int WINAPI ENTRY(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In
 		return 0;
 	}
 	Controller controller(hInstance);
-	controller.LoadData("save/data.json");
+	controller.LoadData("resource/save/data.json");
 	int exitCode = controller.run();
-	controller.SaveData("save/data.json");
+	controller.SaveData("resource/save/data.json");
 	return exitCode;
 }
