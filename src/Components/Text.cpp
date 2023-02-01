@@ -1,14 +1,15 @@
-#include "Text.h"
+﻿#include "Text.h"
 
 #include "../includes/json.hpp"
 
-Text::Text(RECT rect, std::string_view text, HWND hwnd, COLORREF color, const paint::Font& font, UINT style) : Component(rect, hwnd), text(text), font(font), color(color), style(style) {}
+Text::Text(RECT rect, std::string_view text, HWND hwnd, COLORREF color, const paint::Font& font, UINT style) : Component(rect, hwnd, paint::Pen(), paint::Brush()), text(text), font(font), color(color), style(style) {}
 
 void Text::paint(HDC hdc) const {
 	RECT rc(rect);
 	SelectObject(hdc, font.GetFont());
 	SetTextColor(hdc, color);
-	DrawText(hdc, std::wstring(text.begin(), text.end()).c_str(), int(text.size()), &rc, BS_CENTER);
+	std::wstring wtext = to_utf8(text);
+	DrawText(hdc, wtext.c_str(), int(wtext.size()), &rc, BS_CENTER | DT_WORDBREAK);
 }
 
 void Text::SetText(std::string_view text) {
@@ -60,7 +61,7 @@ nlohmann::json Text::Serialize() const {
 
 std::shared_ptr<Text> Text::Deserialize(const nlohmann::json& serializedText, HWND hwnd) {
 	auto rect = serializedText["Rect"].get<std::vector<int>>();
-	auto text = serializedText["Text"].get<std::string>();
+	auto& text = serializedText["Text"];
 	auto font = paint::Font::Deserialize(serializedText["Font"]);
 	auto color = HexToRGB(serializedText["Color"].get<std::string>());
 	auto style = serializedText["Style"].get<UINT>();

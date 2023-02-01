@@ -10,7 +10,7 @@ private:
 	COLORREF color;
 	UINT style;
 public:
-	Text(RECT rect, std::string_view text, HWND hwnd = nullptr, COLORREF color = RGB(0, 0, 0), const paint::Font& font = { 40, BOLD, MODERN, "Curier New" }, UINT style = BS_CENTER);
+	Text(RECT rect, std::string_view text, HWND hwnd, COLORREF color, const paint::Font& font, UINT style = BS_CENTER);
 	void paint(HDC hdc) const override;
 	void SetText(std::string_view text);
 	std::string GetText() const;

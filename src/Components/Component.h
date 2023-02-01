@@ -14,7 +14,7 @@ protected:
 	static int idCounter;
 	HWND hwnd;
 public:
-	explicit Component(RECT rect, HWND hwnd = nullptr, const paint::Pen& pen = paint::Pen(PS_SOLID, 1, RGB(0, 0, 0)), const paint::Brush& brush = paint::Brush(RGB(0, 0, 0)));
+	explicit Component(RECT rect, HWND hwnd, const paint::Pen& pen, const paint::Brush& brush);
 	~Component() override;
 	virtual void paint(HDC hdc) const = 0;
 	void Invalidate() const;

@@ -4,15 +4,13 @@
 #include <fstream>
 
 Controller::Controller(HINSTANCE HInstance) : hInstance(HInstance) {
-	auto style = std::stoul("0x97000000", nullptr, 16);
-	auto exStyle = std::stoul("0x8080080", nullptr, 16);
 	window = std::make_shared<CanvasWindow>(hInstance,
 		0, 0, 0, 0,
 		paint::Brush(paint::Color::TRANSPARENTC),
 		L"Winjet",
 		CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS | CS_SAVEBITS,
-		style,
-		exStyle);
+		WS_POPUP | WS_VISIBLE | WS_MAXIMIZE,
+		WS_EX_LAYERED | WS_EX_TOOLWINDOW);
 }
 
 Controller::~Controller() {

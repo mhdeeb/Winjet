@@ -5,8 +5,7 @@
 
 #include "util.h"
 
-// Generic Font family's
-enum fontfamily {
+enum class fontfamily {
 	BY_NAME,	// use font name instead of abstract type
 	MODERN,		// monospace with or without serifs
 	ROMAN,		// variable width with serifs

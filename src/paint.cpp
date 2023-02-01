@@ -51,26 +51,25 @@ void Font::SetFont(const int iSize, const unsigned short usStyle, const fontfami
 		lf.lfStrikeOut = false;
 	}
 
-	lf.lfStrikeOut = FALSE;
 	lf.lfCharSet = DEFAULT_CHARSET;
 	lf.lfOutPrecision = OUT_DEFAULT_PRECIS;
 	lf.lfClipPrecision = CLIP_DEFAULT_PRECIS;
 	lf.lfQuality = DEFAULT_QUALITY;
 
 	switch (ffFamily) {
-	case MODERN:
+	case fontfamily::MODERN:
 		lf.lfPitchAndFamily = FF_MODERN;
 		break;
 
-	case ROMAN:
+	case fontfamily::ROMAN:
 		lf.lfPitchAndFamily = FF_ROMAN;
 		break;
 
-	case SCRIPT:
+	case fontfamily::SCRIPT:
 		lf.lfPitchAndFamily = FF_SCRIPT;
 		break;
 
-	case SWISS:
+	case fontfamily::SWISS:
 		lf.lfPitchAndFamily = FF_SWISS;
 		break;
 
@@ -80,9 +79,11 @@ void Font::SetFont(const int iSize, const unsigned short usStyle, const fontfami
 	}
 
 	lf.lfPitchAndFamily |= DEFAULT_PITCH;
+
 	if (cFontName.size() > 0) {
 		wcscpy_s(lf.lfFaceName, std::wstring(cFontName.begin(), cFontName.end()).c_str());
 	}
+
 	font = CreateFontIndirect(&lf);
 }
 

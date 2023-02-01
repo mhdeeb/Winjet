@@ -3,19 +3,19 @@
         "Color": "#00FF00",
         "Component": "Text",
         "Font": {
-            "FontFamily": 1,
-            "FontName": "Curier New",
+            "FontFamily": 0,
+            "FontName": "JetBrainsMono Nerd Font Mono",
             "FontSize": 40,
-            "FontStyle": 1
+            "FontStyle": 0
         },
         "Rect": [
-            360,
-            130,
+            672,
+            55,
             400,
             80
         ],
         "Style": 768,
-        "Text": "this is a test text\n:D"
+        "Text": "Hello 😀"
     },
     {
         "Brush": {
@@ -28,10 +28,10 @@
             "Width": 1
         },
         "Rect": [
-            443,
-            313,
-            400,
-            40
+            671,
+            11,
+            0,
+            0
         ],
         "Text": {
             "Color": "#FF0000",
@@ -43,13 +43,13 @@
                 "FontStyle": 1
             },
             "Rect": [
-                443,
-                313,
+                671,
+                11,
                 400,
                 40
             ],
             "Style": 768,
-            "Text": "2023-01-31 22:04:57"
+            "Text": "2023-02-01 05:09:30"
         }
     }
 ]

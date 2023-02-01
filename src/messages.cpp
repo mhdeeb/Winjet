@@ -104,6 +104,7 @@ void Log(UINT message, WPARAM wParam) {
 			break;
 		default:
 			print("Unhandled Mouse Event:", my_ssql::code_to_name_msg(message));
+			break;
 		}
 	} else if (isKeyboardEvent(message)) {
 		std::string key = my_ssql::code_to_name_vk(char(wParam));
@@ -125,8 +126,12 @@ void Log(UINT message, WPARAM wParam) {
 			break;
 		default:
 			print("Unhandled Keyboard Event:", key);
+			break;
 		}
-	} else if (WM_60_FRAMES);
-	else
-		print("Other Event:", my_ssql::code_to_name_msg(message));
+	} else {
+		if (std::string name = my_ssql::code_to_name_msg(message); !name.empty())
+			print("Unhandled Event:", name);
+		else
+			print("Unhandled Event:", message);
+	}
 }

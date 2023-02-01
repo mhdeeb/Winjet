@@ -28,7 +28,7 @@ RECT Component::GetRect() const { return rect; }
 
 std::shared_ptr<Component> Component::Deserialize(const nlohmann::json& data, HWND hwnd)
 {
-	std::string type = data["Component"];
+	auto& type = data["Component"];
 	if (type == "DigitalClock") {
 		return DigitalClock::Deserialize(data, hwnd);
 	} else if (type == "Text") {
