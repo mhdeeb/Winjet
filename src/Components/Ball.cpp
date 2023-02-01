@@ -3,8 +3,10 @@
 #include "../includes/json.hpp"
 
 constexpr auto DELTA_TIME = 0.01;
-constexpr auto GRAVITY = 60;
-constexpr auto RESITUTION_FACTOR = 0.9;
+constexpr auto GRAVITY = 100;
+constexpr auto RESITUTION_FACTOR = 0.85;
+constexpr auto FRICTION_FACTOR = 0.95;
+constexpr auto DELTA_SCALE = 4;
 
 Ball::Ball(RECT rect, HWND hwnd, const paint::Pen& Pen, const paint::Brush& Brush) : Component(rect, hwnd, Pen, Brush) {
 	time_updater.start(int(DELTA_TIME * 1000), [this]() { UpdatePhysics(); });
@@ -25,15 +27,19 @@ void Ball::UpdatePhysics() {
 		GetClientRect(GetHwnd(), &rc);
 		if (rect.left < rc.left) {
 			vx = int(abs(vx * RESITUTION_FACTOR));
+			vy *= FRICTION_FACTOR;
 			rmove({ rc.left - rect.left, 0 });
 		} else if (rect.right > rc.right) {
 			vx = -int(abs(vx * RESITUTION_FACTOR));
+			vy *= FRICTION_FACTOR;
 			rmove({ rc.right - rect.right, 0 });
 		}
 		if (rect.bottom > rc.bottom - 50) {
+			vx *= FRICTION_FACTOR;
 			vy = -int(abs(vy * RESITUTION_FACTOR));
 			rmove({ 0, rc.bottom - rect.bottom - 50 });
 		} else if (rect.top < rc.top) {
+			vx *= FRICTION_FACTOR;
 			vy = int(abs(vy * RESITUTION_FACTOR));
 			rmove({ 0, rc.top - rect.top });
 		}
@@ -43,8 +49,8 @@ void Ball::UpdatePhysics() {
 void Ball::rmove(const POINT& delta) {
 	Component::rmove(delta);
 	if (isSelected) {
-		vx = 3 * delta.x;
-		vy = 3 * delta.y;
+		vx = DELTA_SCALE * delta.x;
+		vy = DELTA_SCALE * delta.y;
 	}
 }
 
