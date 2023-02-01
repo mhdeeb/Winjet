@@ -9,8 +9,8 @@
             "FontStyle": 0
         },
         "Rect": [
-            672,
-            55,
+            10,
+            50,
             400,
             80
         ],
@@ -28,13 +28,13 @@
             "Width": 1
         },
         "Rect": [
-            671,
-            11,
+            10,
+            7,
             0,
             0
         ],
         "Text": {
-            "Color": "#FF0000",
+            "Color": "#AAAAAA",
             "Component": "Text",
             "Font": {
                 "FontFamily": 1,
@@ -43,13 +43,30 @@
                 "FontStyle": 1
             },
             "Rect": [
-                671,
-                11,
+                10,
+                7,
                 400,
                 40
             ],
             "Style": 768,
-            "Text": "2023-02-01 05:09:30"
+            "Text": "2023-02-01 07:20:27"
         }
+    },
+    {
+        "Brush": {
+            "Color": "#FF2020"
+        },
+        "Component": "Ball",
+        "Pen": {
+            "Color": "#00FFFF",
+            "Style": 6,
+            "Width": 5
+        },
+        "Rect": [
+            244,
+            273,
+            100,
+            100
+        ]
     }
 ]

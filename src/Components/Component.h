@@ -12,6 +12,7 @@ protected:
 	paint::Pen pen;
 	paint::Brush brush;
 	static int idCounter;
+	bool isSelected = false;
 	HWND hwnd;
 public:
 	explicit Component(RECT rect, HWND hwnd, const paint::Pen& pen, const paint::Brush& brush);
@@ -23,8 +24,10 @@ public:
 	virtual void move(const POINT& point);
 	virtual void rmove(const POINT& delta);
 	virtual bool IsPointInComponent(const POINT& point) const;
-	paint::Pen GetPen() const;
-	paint::Brush GetBrush() const;
+	void SetSelected(bool isSelected);
+	bool IsSelected() const;
+	const paint::Pen& GetPen() const;
+	const paint::Brush& GetBrush() const;
 	nlohmann::json Serialize() const override = 0;
 	virtual void SetHwnd(HWND hwnd);
 	HWND GetHwnd() const;

@@ -215,11 +215,16 @@ std::vector<std::shared_ptr<Component>>* WindowClass::GetComponents()
 void WindowClass::SelectComponentAtPoint(const POINT& point)
 {
 	SelectedComponent = GetComponentAtPoint(point);
+	if (SelectedComponent)
+		SelectedComponent->SetSelected(true);
 }
 
 void WindowClass::ReleaseSelectedComponent()
 {
-	SelectedComponent = nullptr;
+	if (SelectedComponent) {
+		SelectedComponent->SetSelected(false);
+		SelectedComponent = nullptr;
+	}
 }
 
 std::shared_ptr<Component> WindowClass::GetSelectedComponent() const

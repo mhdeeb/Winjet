@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CallBackTimer.cpp" />
+    <ClCompile Include="src\Components\Ball.cpp" />
     <ClCompile Include="src\Components\Component.cpp" />
     <ClCompile Include="src\Components\DigitalClock.cpp" />
     <ClCompile Include="src\Components\Text.cpp" />
@@ -36,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CallBackTimer.h" />
+    <ClInclude Include="src\Components\Ball.h" />
     <ClInclude Include="src\Components\Component.h" />
     <ClInclude Include="src\Components\DigitalClock.h" />
     <ClInclude Include="src\Components\Text.h" />

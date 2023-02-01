@@ -90,7 +90,7 @@ nlohmann::json CanvasWindow::Serialize() const
 
 std::shared_ptr<CanvasWindow> CanvasWindow::Deserialize(const nlohmann::json& data, HINSTANCE hInstance)
 {
-	auto rect = data["Rect"];
+	auto rect = data["Rect"].get<std::vector<int>>();
 	auto brush = paint::Brush::Deserialize(data["Brush"]);
 	auto name = data["Name"].get<std::string>();
 	auto style = std::stoul(data["Style"].get<std::string>(), nullptr, 16);

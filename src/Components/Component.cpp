@@ -1,6 +1,7 @@
 #include "Component.h"
 #include "Text.h"
 #include "DigitalClock.h"
+#include "Ball.h"
 
 #include "../includes/json.hpp"
 
@@ -14,9 +15,9 @@ void Component::SetPen(const paint::Pen& pen) { this->pen = pen; Invalidate(); }
 
 void Component::SetBrush(const paint::Brush& brush) { this->brush = brush; Invalidate(); }
 
-paint::Pen Component::GetPen() const { return pen; }
+const paint::Pen& Component::GetPen() const { return pen; }
 
-paint::Brush Component::GetBrush() const { return brush; }
+const paint::Brush& Component::GetBrush() const { return brush; }
 
 void Component::SetHwnd(HWND hwnd) { this->hwnd = hwnd; }
 
@@ -33,16 +34,29 @@ std::shared_ptr<Component> Component::Deserialize(const nlohmann::json& data, HW
 		return DigitalClock::Deserialize(data, hwnd);
 	} else if (type == "Text") {
 		return Text::Deserialize(data, hwnd);
+	} else if (type == "Ball") {
+		return Ball::Deserialize(data, hwnd);
 	} else {
 		return nullptr;
 	}
 }
 
-void Component::Invalidate() const { InvalidateRect(hwnd, &rect, false); }
+void Component::Invalidate() const {
+	RECT rc(rect);
+	rc.left -= 1;
+	rc.top -= 1;
+	rc.right += 1;
+	rc.bottom += 1;
+	InvalidateRect(hwnd, &rc, false);
+}
 
 bool Component::IsPointInComponent(const POINT& point) const {
 	return point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom;
 }
+
+void Component::SetSelected(bool IsSelected) { isSelected = IsSelected; }
+
+bool Component::IsSelected() const { return isSelected; }
 
 void Component::move(const POINT& point) {
 	RECT r = rect;
