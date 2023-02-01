@@ -4,12 +4,14 @@
 #include <fstream>
 
 Controller::Controller(HINSTANCE HInstance) : hInstance(HInstance) {
+	RECT desktop_rect;
+	GetWindowRect(GetDesktopWindow(), &desktop_rect);
 	window = std::make_shared<CanvasWindow>(hInstance,
-		0, 0, 0, 0,
+		0, 0, desktop_rect.right, desktop_rect.bottom - 1,
 		paint::Brush(paint::Color::TRANSPARENTC),
 		L"Winjet",
 		CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS | CS_SAVEBITS,
-		WS_POPUP | WS_VISIBLE | WS_MAXIMIZE,
+		WS_POPUP | WS_VISIBLE,
 		WS_EX_LAYERED | WS_EX_TOOLWINDOW);
 }
 
