@@ -68,5 +68,42 @@
             100,
             100
         ]
+    },
+    {
+        "Brush": {
+            "Color": "#000100"
+        },
+        "Component": "Command",
+        "Pen": {
+            "Color": "#0000FF",
+            "Style": 0,
+            "Width": 1
+        },
+        "Rect": [
+            4,
+            3,
+            0,
+            0
+        ],
+        "Text": {
+            "Color": "#AAAAAA",
+            "Component": "Text",
+            "Font": {
+                "FontFamily": 1,
+                "FontName": "JetBrainsMono Nerd Font Mono",
+                "FontSize": 40,
+                "FontStyle": 1
+            },
+            "Rect": [
+                4,
+                3,
+                460,
+                80
+            ],
+            "Style": 768,
+            "Text": ""
+        },
+        "Command": "time /T",
+        "RefreshTime": 1000
     }
 ]

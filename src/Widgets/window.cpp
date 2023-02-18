@@ -1,12 +1,8 @@
 #include "window.h"
-#include "canvas.h"
-#include "../paint.h"
 #include "../messages.h"
-#include "../Components/DigitalClock.h"
 
-#include <sstream>
 #include <ranges>
-#include <algorithm>
+#include <ShObjIdl.h>
 
 void AddTrayIcon(HWND hwnd, UINT uID, UINT uCallbackMsg) {
 	NOTIFYICONDATA nid{};
@@ -51,13 +47,21 @@ void ToggleTaskBar(HWND hwnd, bool show) {
 	SHAppBarMessage(ABM_WINDOWPOSCHANGED, &abd);
 }
 
+//undocumented
+void HideDesktop() {
+	HWND h = FindWindow(L"Shell_TrayWnd", nullptr);
+	SendMessage(h, WM_COMMAND, 416, 0);
+	Sleep(1);
+	SendMessage(h, WM_COMMAND, 419, 0);
+}
+
 LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	//Log(message, wParam);
 	switch (message) {
 	case CM_TRAY:
 		switch (LOWORD(lParam)) {
 		case NIN_SELECT:
-			PostMessage(hwnd, WM_CLOSE, 0, 0);
+			HideDesktop();
 			break;
 			//case NIN_KEYSELECT:
 		case WM_CONTEXTMENU:

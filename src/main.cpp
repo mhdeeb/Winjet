@@ -4,8 +4,8 @@
 #define ENTRY WinMain
 
 void init() {
-	if (FindWindow(L"CanvasWindow", L"Winjet")) {
-		MessageBox(nullptr, L"Previous instance alredy running!", L"Warning", MB_OK);
+	if (FindWindowW(L"CanvasWindow", L"Winjet")) {
+		MessageBoxW(nullptr, L"Previous instance alredy running!", L"Warning", MB_OK);
 		exit(0);
 	}
 

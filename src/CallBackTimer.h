@@ -4,39 +4,49 @@
 #include <functional>
 #include <map>
 
-class CallBackTimer {
+class CallBackTimer
+{
 private:
 	std::atomic<bool> _execute = false;
 	std::jthread _thd;
+	int _interval = 0;
+
 public:
 	~CallBackTimer();
 
 	void stop();
 
-	template<typename _FUNC, typename ... _ARGS>
-	void start(int interval, _FUNC func, _ARGS...args) {
+	template <typename _FUNC, typename... _ARGS>
+	void start(int interval, _FUNC func, _ARGS... args)
+	{
+		_interval = interval;
 		if (_execute.load(std::memory_order_acquire))
 			stop();
 		_execute.store(true, std::memory_order_release);
-		_thd = std::jthread([this, interval, func, args...]() {
+		_thd = std::jthread([this, interval, func, args...]()
+							{
 			while (_execute.load(std::memory_order_acquire)) {
 				func(args...);
 				std::this_thread::sleep_for(std::chrono::milliseconds(interval));
-			}
-			});
+			} });
 	}
 
 	bool isRunning() const;
+
+	int getInterval() const;
 };
 
-class TimerQueue {
+class TimerQueue
+{
 private:
 	std::map<unsigned int, CallBackTimer> _timers;
+
 public:
 	~TimerQueue();
 
-	template<typename _FUNC, typename ... _ARGS>
-	void add(unsigned int id, int interval, _FUNC func, _ARGS...args) {
+	template <typename _FUNC, typename... _ARGS>
+	void add(unsigned int id, int interval, _FUNC func, _ARGS... args)
+	{
 		_timers[id].start(interval, func, args...);
 	}
 

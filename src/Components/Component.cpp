@@ -2,6 +2,7 @@
 #include "Text.h"
 #include "DigitalClock.h"
 #include "Ball.h"
+#include "Command.h"
 
 #include "../includes/json.hpp"
 
@@ -36,6 +37,8 @@ std::shared_ptr<Component> Component::Deserialize(const nlohmann::json& data, HW
 		return Text::Deserialize(data, hwnd);
 	} else if (type == "Ball") {
 		return Ball::Deserialize(data, hwnd);
+	} else if (type == "Command") {
+		return Command::Deserialize(data, hwnd);
 	} else {
 		return nullptr;
 	}

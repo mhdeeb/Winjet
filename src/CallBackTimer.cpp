@@ -16,6 +16,11 @@ bool CallBackTimer::isRunning() const {
 	return _execute.load(std::memory_order_acquire);
 }
 
+int CallBackTimer::getInterval() const
+{
+	return _interval;
+}
+
 TimerQueue::~TimerQueue() {
 	stopAll();
 }

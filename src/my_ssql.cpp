@@ -11,12 +11,12 @@ std::string getConnectionString() {
 	return std::vformat("DRIVER={{SQL Server}};Server=np:\\\\.\\pipe\\LOCALDB#{}\\tsql\\query;database=Win32Const", make_format_args(server.substr(0, server.size() - 1)));
 }
 
-const std::string connString = getConnectionString();
+//const std::string connString = getConnectionString();
 
 std::string my_ssql::code_to_name_msg(int code) {
 	ssql sql;
 
-	sql.connect((SQLCHAR*)connString.c_str());
+	//sql.connect((SQLCHAR*)connString.c_str());
 
 	std::string result;
 
@@ -31,7 +31,7 @@ std::string my_ssql::code_to_name_msg(int code) {
 std::string my_ssql::code_to_name_vk(int code) {
 	ssql sql;
 
-	sql.connect((SQLCHAR*)connString.c_str());
+	//sql.connect((SQLCHAR*)connString.c_str());
 
 	std::string result;
 
