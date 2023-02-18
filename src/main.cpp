@@ -3,9 +3,10 @@
 
 #define ENTRY WinMain
 
-void init() {
-	if (FindWindowW(L"CanvasWindow", L"Winjet")) {
-		MessageBoxW(nullptr, L"Previous instance alredy running!", L"Warning", MB_OK);
+void init()
+{
+	if (FindWindow(L"CanvasWindow", L"Winjet")) {
+		MessageBox(nullptr, L"Previous instance alredy running!", L"Warning", MB_OK);
 		exit(0);
 	}
 
@@ -18,7 +19,8 @@ void init() {
 	file.close();
 }
 
-int WINAPI ENTRY(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd) {
+int WINAPI ENTRY(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
+{
 	init();
 	Controller controller(hInstance);
 	controller.LoadData("resource/save/data.json");

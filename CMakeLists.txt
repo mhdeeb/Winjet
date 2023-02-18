@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.24)
 project(Winjet VERSION 0.0.1)
 
-set (CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 include_directories("C:/Program Files/boost/boost_1_81_0")
 link_directories("C:/Program Files/boost/boost_1_81_0/stage/lib")

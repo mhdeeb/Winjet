@@ -5,7 +5,7 @@
 
 #include <fstream>
 
-Command::Command(RECT rect, const paint::Pen& pen, const paint::Brush& brush, const Text& command_string, std::string_view command, int refreshTime, HWND hwnd) : Component(rect, hwnd, pen, brush), command_string(command_string), command(command) {
+Command::Command(RECT rect, const paint::Pen& pen, const paint::Brush& brush, const Text& command_string, std::string_view command, int refreshTime, HWND hwnd): Component(rect, hwnd, pen, brush), command_string(command_string), command(command) {
 	time_updater.start(refreshTime, [this]() { UpdateCommand(); });
 }
 

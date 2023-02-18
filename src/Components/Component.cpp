@@ -8,7 +8,7 @@
 
 int Component::idCounter = 0;
 
-Component::Component(RECT rect, HWND hwnd, const paint::Pen& pen, const paint::Brush& brush) : rect(rect), pen(pen), brush(brush), hwnd(hwnd) { id = idCounter; idCounter++; }
+Component::Component(RECT rect, HWND hwnd, const paint::Pen& pen, const paint::Brush& brush): rect(rect), pen(pen), brush(brush), hwnd(hwnd) { id = idCounter; idCounter++; }
 
 Component::~Component() { idCounter--; }
 

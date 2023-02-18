@@ -8,7 +8,8 @@
 #include <vector>
 #include <memory>
 
-class WindowClass {
+class WindowClass
+{
 private:
 	HWND hwnd;
 	HINSTANCE hInstance;
@@ -18,6 +19,7 @@ private:
 	std::vector<std::shared_ptr<Component>> components;
 	std::shared_ptr<Component> SelectedComponent = nullptr;
 	paint::Brush brush;
+
 public:
 	WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, const paint::Brush& brush, LPCWSTR windowName = nullptr, UINT classStyle = CS_HREDRAW | CS_VREDRAW, UINT styles = NULL, UINT ExStyles = NULL, HWND parent = HWND_DESKTOP);
 

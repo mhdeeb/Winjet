@@ -4,7 +4,7 @@
 
 #include <fstream>
 
-DigitalClock::DigitalClock(RECT rect, const paint::Pen& pen, const paint::Brush& brush, const Text& time_string, HWND hwnd) : Component(rect, hwnd, pen, brush), time_string(time_string) {
+DigitalClock::DigitalClock(RECT rect, const paint::Pen& pen, const paint::Brush& brush, const Text& time_string, HWND hwnd): Component(rect, hwnd, pen, brush), time_string(time_string) {
 	time_updater.start(16, [this]() { UpdateTime(); });
 }
 

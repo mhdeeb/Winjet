@@ -20,7 +20,7 @@ const unsigned char UNDERLINED = 0x04;
 const unsigned char STRIKEOUT = 0x08;
 
 namespace paint {
-	class Font : public Serializable {
+	class Font: public Serializable {
 	private:
 		HFONT font;
 		int fontSize;
@@ -45,7 +45,7 @@ namespace paint {
 		static Font Deserialize(const nlohmann::json& serializedFont);
 	};
 
-	class Brush : public Serializable {
+	class Brush: public Serializable {
 	private:
 		HBRUSH brush;
 		COLORREF brushColor;
@@ -61,7 +61,7 @@ namespace paint {
 		static Brush Deserialize(const nlohmann::json& serializedBrush);
 	};
 
-	class Pen : public Serializable {
+	class Pen: public Serializable {
 	private:
 		HPEN pen;
 		int penStyle;

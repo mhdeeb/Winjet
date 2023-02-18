@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-Controller::Controller(HINSTANCE HInstance) : hInstance(HInstance) {
+Controller::Controller(HINSTANCE HInstance): hInstance(HInstance) {
 	RECT desktop_rect;
 	GetWindowRect(GetDesktopWindow(), &desktop_rect);
 	window = std::make_shared<CanvasWindow>(hInstance,

@@ -5,7 +5,7 @@
 
 #include "../paint.h"
 
-class Component : public Serializable {
+class Component: public Serializable {
 protected:
 	RECT rect;
 	int id;

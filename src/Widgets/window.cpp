@@ -95,7 +95,7 @@ LRESULT CALLBACK proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
-WindowClass::WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, const paint::Brush& brush, LPCWSTR windowName, UINT classStyle, UINT styles, UINT ExStyles, HWND parent) : hInstance(hInstance), className(className), brush(brush) {
+WindowClass::WindowClass(HINSTANCE hInstance, LPCWSTR className, int x, int y, int width, int height, const paint::Brush& brush, LPCWSTR windowName, UINT classStyle, UINT styles, UINT ExStyles, HWND parent): hInstance(hInstance), className(className), brush(brush) {
 	WNDCLASS Class;
 	if (!GetClassInfo(hInstance, className, &Class)) {
 		WNDCLASS wndclass{};

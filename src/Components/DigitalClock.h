@@ -5,7 +5,7 @@
 #include "Text.h"
 #include "../CallBackTimer.h"
 
-class DigitalClock : public Component
+class DigitalClock: public Component
 {
 private:
 	Text time_string;

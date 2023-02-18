@@ -8,7 +8,7 @@ constexpr auto RESITUTION_FACTOR = 0.85;
 constexpr auto FRICTION_FACTOR = 0.95;
 constexpr auto DELTA_SCALE = 4;
 
-Ball::Ball(RECT rect, HWND hwnd, const paint::Pen& Pen, const paint::Brush& Brush) : Component(rect, hwnd, Pen, Brush) {
+Ball::Ball(RECT rect, HWND hwnd, const paint::Pen& Pen, const paint::Brush& Brush): Component(rect, hwnd, Pen, Brush) {
 	time_updater.start(int(DELTA_TIME * 1000), [this]() { UpdatePhysics(); });
 }
 

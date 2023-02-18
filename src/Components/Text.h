@@ -2,7 +2,7 @@
 
 #include "Component.h"
 
-class Text : public Component
+class Text: public Component
 {
 private:
 	std::string text;

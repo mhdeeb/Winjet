@@ -2,7 +2,7 @@
 
 #include "window.h"
 
-class CanvasWindow : public WindowClass {
+class CanvasWindow: public WindowClass {
 private:
 	paint::Brush brush;
 public:

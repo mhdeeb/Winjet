@@ -2,7 +2,7 @@
 
 #include "../includes/json.hpp"
 
-Text::Text(RECT rect, std::string_view text, HWND hwnd, COLORREF color, const paint::Font& font, UINT style) : Component(rect, hwnd, paint::Pen(), paint::Brush()), text(text), font(font), color(color), style(style) {}
+Text::Text(RECT rect, std::string_view text, HWND hwnd, COLORREF color, const paint::Font& font, UINT style): Component(rect, hwnd, paint::Pen(), paint::Brush()), text(text), font(font), color(color), style(style) {}
 
 void Text::paint(HDC hdc) const {
 	RECT rc(rect);

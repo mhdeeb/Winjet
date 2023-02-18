@@ -3,7 +3,7 @@
 #include "Component.h"
 #include "../CallBackTimer.h"
 
-class Ball : public Component
+class Ball: public Component
 {
 private:
 	double vx = 0;

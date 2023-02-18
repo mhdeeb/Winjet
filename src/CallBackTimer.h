@@ -23,8 +23,7 @@ public:
 		if (_execute.load(std::memory_order_acquire))
 			stop();
 		_execute.store(true, std::memory_order_release);
-		_thd = std::jthread([this, interval, func, args...]()
-							{
+		_thd = std::jthread([this, interval, func, args...]() {
 			while (_execute.load(std::memory_order_acquire)) {
 				func(args...);
 				std::this_thread::sleep_for(std::chrono::milliseconds(interval));

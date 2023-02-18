@@ -5,7 +5,7 @@
 #include "Text.h"
 #include "../CallBackTimer.h"
 
-class Command : public Component
+class Command: public Component
 {
 private:
 	Text command_string;

@@ -31,7 +31,7 @@ CanvasWindow::CanvasWindow(HINSTANCE hInstance,
 	UINT classStyle,
 	UINT styles,
 	UINT ExStyles,
-	HWND parent) :
+	HWND parent):
 	WindowClass(hInstance,
 		L"CanvasWindow",
 		x, y, width, height,
