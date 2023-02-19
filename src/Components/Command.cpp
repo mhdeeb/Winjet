@@ -15,7 +15,7 @@ void Command::paint(HDC hdc) const {
 }
 
 void Command::UpdateCommand() {
-	command_string.SetText(exec(command.c_str()));
+	command_string.SetText(exec(command));
 }
 
 Command::~Command() {

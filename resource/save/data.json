@@ -31,7 +31,7 @@
                 80
             ],
             "Style": 768,
-            "Text": "2023-02-01 06:32:55 PM\nWed"
+            "Text": ""
         }
     },
     {
@@ -103,7 +103,7 @@
             "Style": 768,
             "Text": ""
         },
-        "Command": "time /T",
+        "Command": "\"resource/command/test.cmd\"",
         "RefreshTime": 1000
     }
 ]
