@@ -6,11 +6,12 @@ set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 include_directories("C:/Program Files/boost/boost_1_81_0")
 link_directories("C:/Program Files/boost/boost_1_81_0/stage/lib")
-link_libraries("odbc32.lib")
+link_libraries(odbc32.lib)
 add_compile_definitions(UNICODE _WIN32_WINNT=0x0601)
 
 add_executable(
-    Winjet WIN32
+    Winjet
+    # WIN32
     src/main.cpp
     src/CallBackTimer.cpp
     src/controller.cpp
@@ -41,5 +42,5 @@ add_executable(
 
 add_custom_command(
     TARGET Winjet POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "C:/Users/eldeeb/source/repos/mhdeeb/Winjet/resource" $<TARGET_FILE_DIR:Winjet>/resource
+    COMMAND ${CMAKE_COMMAND} -E copy_directory C:/Users/eldeeb/source/repos/mhdeeb/Winjet/resource $<TARGET_FILE_DIR:Winjet>/resource
 )

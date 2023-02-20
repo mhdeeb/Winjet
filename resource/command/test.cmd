@@ -1,3 +1,3 @@
 @echo off
 
-Time /T
+echo -e "This is a test"

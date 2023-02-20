@@ -7,6 +7,8 @@ class Text: public Component
 private:
 	std::string text;
 	paint::Font font;
+	LONG maxWidth;
+	LONG maxHeight;
 	COLORREF color;
 	UINT style;
 public:
