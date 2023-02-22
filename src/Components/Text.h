@@ -14,6 +14,7 @@ private:
 public:
 	Text(RECT rect, std::string_view text, HWND hwnd, COLORREF color, const paint::Font& font, UINT style = BS_CENTER);
 	void paint(HDC hdc) const override;
+	SIZE GetTextShape();
 	void SetText(std::string_view text);
 	std::string GetText() const;
 	void SetFont(const paint::Font& font);

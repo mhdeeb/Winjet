@@ -1,6 +1,8 @@
 ﻿#include "Text.h"
 
 #include "../includes/json.hpp"
+
+#include <boost/algorithm/string.hpp>
 #include <iostream>
 
 Text::Text(RECT rect, std::string_view text, HWND hwnd, COLORREF color, const paint::Font& font, UINT style):
@@ -18,16 +20,34 @@ void Text::paint(HDC hdc) const {
 	DrawText(hdc, wtext.c_str(), int(wtext.size()), &rc, BS_CENTER | DT_WORDBREAK);
 }
 
+SIZE Text::GetTextShape()
+{
+	int maxWidth = 0;
+	int currentWidth = 0;
+	for (auto c : to_utf8(text)) {
+		if (c == '\n') {
+			if (currentWidth > maxWidth)
+				maxWidth = currentWidth;
+			currentWidth = 0;
+		} else
+			currentWidth += font.GetFontSize() / 2;
+	}
+	if (currentWidth > maxWidth)
+		maxWidth = currentWidth;
+	int maxHeight = font.GetFontSize() * (std::count(text.begin(), text.end(), '\n') + 1);
+	return { maxWidth, maxHeight };
+}
+
 void Text::SetText(std::string_view text) {
-	rect.right = rect.left + font.GetFontSize() * to_utf8(text).size();
-	rect.bottom = rect.top + font.GetFontSize() * 2;
+	this->text = text;
+	boost::trim(this->text);
+	SIZE size = GetTextShape();
+	rect.right = rect.left + size.cx;
+	rect.bottom = rect.top + size.cy;
 	if (rect.right - rect.left > maxWidth)
 		rect.right = rect.left + maxWidth;
 	if (rect.bottom - rect.top > maxHeight)
 		rect.bottom = rect.top + maxHeight;
-	std::cout << text << ' ' << font.GetFontSize() * to_utf8(text).size() << ' ' << font.GetFontSize() * 2 << std::endl;
-	Sleep(100);
-	this->text = text;
 	Invalidate();
 }
 

@@ -50,7 +50,7 @@ void Component::Invalidate() const {
 	rc.top -= 1;
 	rc.right += 1;
 	rc.bottom += 1;
-	InvalidateRect(hwnd, &rc, false);
+	InvalidateRect(hwnd, &rc, true);
 }
 
 bool Component::IsPointInComponent(const POINT& point) const {
@@ -67,8 +67,8 @@ void Component::move(const POINT& point) {
 	rect.bottom += point.y - rect.top;
 	rect.left = point.x;
 	rect.top = point.y;
-	r = { min(rect.left, r.left), min(rect.top, r.top), max(rect.right, r.right), max(rect.bottom, r.bottom) };
-	InvalidateRect(hwnd, &r, false);
+	r = { min(rect.left, r.left) - 1, min(rect.top, r.top) - 1, max(rect.right, r.right) + 1, max(rect.bottom, r.bottom) + 1 };
+	InvalidateRect(hwnd, &r, true);
 }
 
 void Component::rmove(const POINT& delta) {
@@ -77,6 +77,6 @@ void Component::rmove(const POINT& delta) {
 	rect.right += delta.x;
 	rect.top += delta.y;
 	rect.bottom += delta.y;
-	r = { min(rect.left, r.left), min(rect.top, r.top), max(rect.right, r.right), max(rect.bottom, r.bottom) };
-	InvalidateRect(hwnd, &r, false);
+	r = { min(rect.left, r.left) - 1, min(rect.top, r.top) - 1, max(rect.right, r.right) + 1, max(rect.bottom, r.bottom) + 1 };
+	InvalidateRect(hwnd, &r, true);
 }
